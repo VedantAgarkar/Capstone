@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 # Add parent directory to path for importing utils
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import apply_common_styling, apply_button_styling, render_navbar, load_model, get_openai_client, get_model_name, call_openai_api, get_language, get_text
+from utils import apply_common_styling, apply_button_styling, render_navbar, load_model, get_openai_client, get_model_name, call_openai_api, get_language, get_text, render_risk_meter, generate_pdf_report
 
 # Load environment variables
 load_dotenv()
@@ -283,15 +283,23 @@ if st.session_state.get("assessment"):
     else:
         st.success(f"✅ **{risk_labels['low']}**: {risk_pct:.1f}% probability")
     
-    st.markdown("### 📋 Result:")
-    st.write(st.session_state.assessment)
+    # Render visual risk meter
+    render_risk_meter(risk_pct)
     
+    # Generate PDF Report
+    pdf_bytes = generate_pdf_report(
+        content=st.session_state.assessment,
+        risk_pct=risk_pct,
+        title="Diabetes Risk Assessment",
+        patient_info=f"Age: {age}, Sex: {sex}, Glucose: {glucose}"
+    )
+
     # Download button
     st.download_button(
         label=L('download'),
-        data=st.session_state.assessment,
-        file_name=f"diabetes_risk_assessment_{LANG}.txt",
-        mime="text/plain"
+        data=pdf_bytes,
+        file_name=f"diabetes_risk_assessment_{LANG}.pdf",
+        mime="application/pdf"
     )
 
 # ───────────── Sticky Footer ───────────── #

@@ -170,5 +170,270 @@ def call_openai_api(client, prompt, model=None, timeout=30):
         )
         return response.choices[0].message.content
     except Exception as e:
-        st.error(f"API Error: {str(e)}")
         return None
+
+def render_risk_meter(risk_percentage):
+    """
+    Render a visual risk meter (gauge) using HTML/CSS.
+    
+    Args:
+        risk_percentage (float): Risk percentage (0-100)
+    """
+    # Clamp value between 0 and 100
+    risk_value = max(0, min(100, risk_percentage))
+    
+    # Determine color based on risk
+    if risk_value < 40:
+        color = "#28a745" # Green
+        label = "LOW RISK"
+    elif risk_value < 70:
+        color = "#fd7e14" # Orange
+        label = "MODERATE RISK"
+    else:
+        color = "#dc3545" # Red
+        label = "HIGH RISK"
+        
+    # HTML for the meter
+    meter_html = f"""
+    <div style="margin: 20px 0; font-family: sans-serif;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; color: #555;">
+            <span>0%</span>
+            <span>Risk Probability</span>
+            <span>100%</span>
+        </div>
+        <div style="
+            position: relative;
+            height: 30px;
+            background: linear-gradient(to right, #28a745 0%, #ffc107 50%, #dc3545 100%);
+            border-radius: 15px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        ">
+            <div style="
+                position: absolute;
+                left: {risk_value}%;
+                top: -10px;
+                transform: translateX(-50%);
+                width: 0; 
+                height: 0; 
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-top: 15px solid #333;
+            "></div>
+            <div style="
+                position: absolute;
+                left: {risk_value}%;
+                top: -35px;
+                transform: translateX(-50%);
+                background-color: #333;
+                color: white;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 14px;
+                font-weight: bold;
+                white-space: nowrap;
+            ">
+                {risk_value:.1f}%
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 15px; font-size: 18px; font-weight: bold; color: {color};">
+            {label}
+        </div>
+    </div>
+    """
+    st.markdown(meter_html, unsafe_allow_html=True)
+
+def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Provided"):
+    """
+    Generate a formatted PDF report with risk meter visualization.
+    
+    Args:
+        content (str): Markdown formatted text content
+        risk_pct (float): Risk percentage (0-100)
+        title (str): Report title
+        patient_info (str or dict): Patient details
+        
+    Returns:
+        bytearray: PDF content in bytes
+    """
+    from fpdf import FPDF
+    import io
+    import re
+    
+    class PDF(FPDF):
+        def header(self):
+            # Banner color
+            self.set_fill_color(6, 6, 28) # #06061C dark blue
+            self.rect(0, 0, 210, 40, 'F')
+            
+            # Title
+            self.set_font('Arial', 'B', 24)
+            self.set_text_color(255, 255, 255) # White
+            self.cell(0, 20, "HealthPredict", 0, 1, 'C', False)
+            
+            # Subtitle
+            self.set_font('Arial', 'I', 12)
+            self.cell(0, 5, "Medical Risk Assessment AI", 0, 1, 'C', False)
+            self.ln(20)
+
+        def footer(self):
+            self.set_y(-15)
+            self.set_font('Arial', 'I', 8)
+            self.set_text_color(128, 128, 128)
+            self.cell(0, 10, 'HealthPredict AI - Not a substitute for professional medical advice | Page ' + str(self.page_no()), 0, 0, 'C')
+
+    # Create PDF object
+    pdf = PDF()
+    pdf.add_page()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    
+    # ─── REPORT TITLE ───
+    pdf.set_font("Arial", "B", 18)
+    pdf.set_text_color(183, 147, 71) # Gold #B79347
+    pdf.cell(0, 10, title, 0, 1, 'L')
+    pdf.ln(5)
+    
+    # ─── VISUAL RISK METER ───
+    pdf.set_font("Arial", "B", 12)
+    pdf.set_text_color(50, 50, 50)
+    pdf.cell(0, 10, f"Risk Probability: {risk_pct:.1f}%", 0, 1, 'L')
+    
+    # Draw Meter Background
+    bar_x = 10
+    bar_y = pdf.get_y() + 2
+    bar_w = 190
+    bar_h = 10
+    
+    # Gradient-like effect using rectangles
+    # Green (Low)
+    pdf.set_fill_color(40, 167, 69)
+    pdf.rect(bar_x, bar_y, bar_w * 0.4, bar_h, 'F')
+    # Orange (Moderate)
+    pdf.set_fill_color(253, 126, 20)
+    pdf.rect(bar_x + bar_w * 0.4, bar_y, bar_w * 0.3, bar_h, 'F')
+    # Red (High)
+    pdf.set_fill_color(220, 53, 69)
+    pdf.rect(bar_x + bar_w * 0.7, bar_y, bar_w * 0.3, bar_h, 'F')
+    
+    # Draw Arrow Indicator
+    clean_pct = max(0, min(100, risk_pct))
+    arrow_x = bar_x + (bar_w * (clean_pct / 100))
+    
+    pdf.set_fill_color(0, 0, 0)
+    # Triangle Polygon
+    # (x1,y1), (x2,y2), (x3,y3)
+    # Pointing down to the bar
+    # Triangle Polygon (manual lines since polygon might not exist in old fpdf)
+    # (x1,y1) -> (x2,y2) -> (x3,y3) -> close
+    # Pointing down to the bar at (arrow_x, bar_y - 2)
+    # Top Left: (arrow_x - 3, bar_y - 8)
+    # Top Right: (arrow_x + 3, bar_y - 8)
+    
+    # We can use a small filled rect as a marker if polygon fails, or draw lines.
+    # To be safe and simple: Draw a small black rectangle as the marker
+    pdf.rect(arrow_x - 1.5, bar_y - 8, 3, 6, 'F')
+    
+    pdf.ln(20)
+    
+    lines = content.split('\n')
+    
+    # Try to add a Unicode font (e.g., Arial Unicode or similar if available)
+    font_path = "C:\\Windows\\Fonts\\mangal.ttf" # Mangal is common for Devanagari
+    has_unicode_font = False
+    
+    if os.path.exists(font_path):
+        try:
+            pdf.add_font('MarathiFont', '', font_path, uni=True)
+            has_unicode_font = True
+        except:
+            has_unicode_font = False
+
+    # Pre-process content if NO unicode font is available
+    if not has_unicode_font:
+        content = content.replace(u'\xa0', u' ')
+        try:
+            content = content.encode('latin-1', 'replace').decode('latin-1')
+        except:
+            pass
+        lines = content.split('\n')
+
+    for line in lines:
+        line = line.strip()
+        if not line:
+            pdf.ln(5)
+            continue
+            
+        if has_unicode_font:
+             # Use the unicode font logic
+             if line.startswith('###'):
+                 pdf.set_font("MarathiFont", "", 14)
+                 pdf.set_text_color(6, 6, 28)
+             elif line.startswith('##'):
+                 pdf.set_font("MarathiFont", "", 13)
+                 pdf.set_text_color(0, 0, 0)
+             else:
+                 pdf.set_font("MarathiFont", "", 11)
+                 pdf.set_text_color(0, 0, 0)
+
+             clean_line = line.replace('#', '').replace('**', '').strip()
+             pdf.write(6, clean_line)
+             pdf.ln(6)
+             continue
+            
+        # Fallback Logic (Standard Fonts)
+        # Headers (###)
+        if line.startswith('###'):
+            pdf.set_font("Arial", "B", 14)
+            pdf.set_text_color(6, 6, 28) # Dark Blue
+            clean_line = line.replace('#', '').strip()
+            pdf.cell(0, 10, clean_line, 0, 1, 'L')
+            pdf.set_text_color(0, 0, 0)
+            
+        # Headers (##)
+        elif line.startswith('##'):
+            pdf.set_font("Arial", "B", 13)
+            # Remove symbols
+            clean_line = line.replace('#', '').strip()
+            pdf.cell(0, 10, clean_line, 0, 1, 'L')
+            
+        # Bold points (- **Something**: text)
+        elif line.startswith('-'):
+            pdf.set_font("Arial", "", 11)
+            parts = re.split(r'(\*\*.*?\*\*)', line)
+            pdf.set_x(15) 
+            for part in parts:
+                if part.startswith('**') and part.endswith('**'):
+                    pdf.set_font("Arial", "B", 11)
+                    clean_part = part.replace('**', '')
+                    pdf.write(5, clean_part)
+                else:
+                    pdf.set_font("Arial", "", 11)
+                    pdf.write(5, part)
+            pdf.ln(6)
+            
+        # Numbered lists (1. Something)
+        elif re.match(r'^\d+\.', line):
+            pdf.set_font("Arial", "B", 11)
+            pdf.write(6, line)
+            pdf.ln(6)
+            
+        # Standard Text
+        else:
+            pdf.set_font("Arial", "", 11)
+            parts = re.split(r'(\*\*.*?\*\*)', line)
+            for part in parts:
+                if part.startswith('**') and part.endswith('**'):
+                    pdf.set_font("Arial", "B", 11)
+                    clean_part = part.replace('**', '')
+                    pdf.write(5, clean_part)
+                else:
+                    pdf.set_font("Arial", "", 11)
+                    pdf.write(5, part)
+            pdf.ln(6)
+            
+    # Return PDF bytes
+    try:
+        return pdf.output(dest='S').encode('latin-1', 'replace') 
+    except Exception as e:
+        # If encoding fails, fallback to string conversion
+        return str(pdf.output(dest='S')).encode('latin-1', 'replace') 
+

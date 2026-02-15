@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 # Add parent directory to path for importing utils
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import apply_common_styling, apply_button_styling, render_navbar, load_model, get_openai_client, get_model_name, call_openai_api
+from utils import apply_common_styling, apply_button_styling, render_navbar, load_model, get_openai_client, get_model_name, call_openai_api, render_risk_meter, generate_pdf_report
 
 # Load environment variables
 load_dotenv()
@@ -248,15 +248,26 @@ if st.session_state.get("assessment"):
     else:
         st.success(f"✅ **LOW RISK**: {risk_pct:.1f}% probability of heart disease")
     
+    # Render visual risk meter
+    render_risk_meter(risk_pct)
+    
+    # Generate PDF Report
+    pdf_bytes = generate_pdf_report(
+        content=st.session_state.assessment,
+        risk_pct=risk_pct,
+        title="Heart Disease Risk Assessment",
+        patient_info=f"Age: {age}, Sex: {sex}, BP: {resting_bp}"
+    )
+
     st.markdown("### 📋 Your Heart Disease Risk Assessment:")
     st.write(st.session_state.assessment)
     
     # Download button
     st.download_button(
-        label="📥 Download Assessment",
-        data=st.session_state.assessment,
-        file_name="heart_disease_risk_assessment.txt",
-        mime="text/plain"
+        label="📥 Download Assessment (PDF)",
+        data=pdf_bytes,
+        file_name="heart_disease_risk_assessment.pdf",
+        mime="application/pdf"
     )
 
 # ─────────────📌 Sticky Footer──────────────────────── #

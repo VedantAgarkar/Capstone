@@ -3,7 +3,7 @@ import os
 import datetime
 
 # Configuration
-checkpoint_name = "checkpoint_4_product_requirements"
+checkpoint_name = "checkpoint_5_visual_meter"
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 archive_name = f"{checkpoint_name}_{timestamp}.zip"
 output_dir = "backups"

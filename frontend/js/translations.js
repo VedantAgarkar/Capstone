@@ -68,11 +68,14 @@ window.translations = {
         g8: "Chest pain or discomfort caused by reduced blood flow to the heart muscle.",
         g9: "An ECG finding that can indicate the heart muscle isn't getting enough oxygen.",
         g10: "An inherited blood disorder characterized by less hemoglobin than normal.",
+        g11: "A frequency variation measure (Jitter) used in voice analysis to detect vocal instability, common in Parkinson's.",
+        g12: "An amplitude variation measure (Shimmer) used to assess voice strength consistency.",
+        g13: "Noise-to-Harmonics Ratio; measures the breathiness or hoarseness in voice quality.",
+        g14: "Harmonics-to-Noise Ratio; indicates the purity of the voice signal.",
         support_title: "Troubleshooting & Support",
         s1: "Assessment not loading? Try Chrome/Edge browser and enable JavaScript.",
         s2: "Form validation errors? Make sure all required health fields are filled.",
         s3: "Site glitches? Refresh or clear your cache.",
-        contact: "Still confused?",
         footer: "© 2025 HealthPredict - Medical Risk Prediction AI"
     },
     solutions: {
@@ -83,26 +86,29 @@ window.translations = {
       bot: "Health Chatbot"
     },
     products: {
-      title: "Medical Risk Assessment Tools",
+      title: "Our Health Products",
       heart: {
         title: "Heart Disease Risk",
         desc: "Get a comprehensive heart disease risk assessment based on your health metrics.",
-        btn: "Try Now"
+        req: "Requirements: Lipid Profile, Blood Pressure, Fasting Blood Sugar, ECG, Stress Test.",
+        btn: "Check Heart Risk"
       },
       parkinsons: {
         title: "Parkinson's Disease Risk",
         desc: "Assess your Parkinson's disease risk using advanced AI analysis.",
-        btn: "Try Now"
+        req: "Requirements: Voice Analysis (Jitter, Shimmer), Frequency Measures.",
+        btn: "Check Parkinson's Risk"
       },
       diabetes: {
         title: "Diabetes Risk Assessment",
         desc: "Evaluate your diabetes risk with our comprehensive health questionnaire.",
-        btn: "Try Now"
+        req: "Requirements: Glucose (OGTT/FBS), Insulin, Blood Pressure, BMI.",
+        btn: "Check Diabetes Risk"
       },
       bot: {
         title: "Medical AI Bot",
         desc: "Ask any medical question and get instant answers from our health-focused AI chatbot.",
-        btn: "Try Now"
+        btn: "Chat Now"
       }
     },
     footer: "© 2026 HealthPredict - Medical Risk Prediction AI"
@@ -176,6 +182,10 @@ window.translations = {
         g8: "हृदयाच्या स्नायूंना रक्तपुरवठा कमी झाल्यामुळे होणारी छातीतील वेदना.",
         g9: "ईसीजी (ECG) मधील एक बदल जो हृदयाला पुरेसा ऑक्सिजन मिळत नसल्याचे दर्शवू शकतो.",
         g10: "एक अनुवांशिक रक्त विकार ज्यामध्ये शरीरात सामान्यपेक्षा कमी हिमोग्लोबिन असते.",
+        g11: "आवाज विश्लेषणात वापरलेला वारंवारता बदल (Jitter) जो आवाजाची अस्थिरता ओळखतो.",
+        g12: "आवाजाच्या तीव्रतेचे सातत्य मोजण्यासाठी वापरले जाणारे उपाय (Shimmer).",
+        g13: "आवाजातील कर्कशपणा किंवा श्वासोच्छवासाचे प्रमाण मोजण्याचे गुणोत्तर (NHR).",
+        g14: "हार्मोनिक्स-टू-नॉईज रेशो; आवाजाच्या स्पष्टतेचे आणि शुद्धतेचे दर्शक.",
         support_title: "ट्रबलशूटिंग आणि मदत",
         s1: "मूल्यांकन लोड होत नाही? Chrome/Edge ब्राउझर वापरा आणि JavaScript सुरू असल्याची खात्री करा.",
         s2: "फॉर्म त्रुटी? सर्व आवश्यक माहिती भरल्याची खात्री करा.",
@@ -190,26 +200,29 @@ window.translations = {
       bot: "आरोग्य चॅटबॉट"
     },
     products: {
-      title: "वैद्यकीय जोखीम मूल्यांकन साधने",
+      title: "आमची आरोग्य उत्पादने",
       heart: {
-        title: "हृदयरोगाचा धोका",
-        desc: "तुमच्या आरोग्य मेट्रिक्सच्या आधारे सर्वसमावेशक हृदयरोग जोखीम मूल्यांकन मिळवा.",
-        btn: "आता तपासा"
+        title: "हृदयविकाराचा धोका",
+        desc: "तुमच्या आरोग्य मेट्रिक्सवर आधारित सर्वसमावेशक हृदयरोगाच्या जोखीमेचे मूल्यांकन करा.",
+        req: "आवश्यक चाचण्या: लिपिड प्रोफाइल, रक्तदाब, फास्टिंग शुगर, ईसीजी (ECG), स्ट्रेस टेस्ट.",
+        btn: "जोखीम तपासा"
       },
       parkinsons: {
-        title: "पार्किन्सन आजाराची जोखीम",
-        desc: "प्रगत एआय विश्लेषणाचा वापर करून तुमच्या पार्किन्सन रोगाचा धोका तपासा.",
-        btn: "आता तपासा"
+        title: "पार्किन्सन आजाराचा धोका",
+        desc: "प्रगत एआय विश्लेषण वापरून तुमच्या पार्किन्सन आजाराच्या जोखमीचे मूल्यांकन करा.",
+        req: "आवश्यक चाचण्या: आवाज विश्लेषण (Jitter, Shimmer), वारंवारता मोजमाप.",
+        btn: "जोखीम तपासा"
       },
       diabetes: {
-        title: "मधुमेह जोखीम मूल्यांकन",
-        desc: "आमच्या सर्वसमावेशक आरोग्य प्रश्नावलीसह तुमच्या मधुमेहाचा धोका आणि शक्यता तपासा.",
-        btn: "आता तपासा"
+        title: "मधुमेहाच्या जोखीमेचे मूल्यांकन",
+        desc: "आमच्या सर्वसमावेशक आरोग्य प्रश्नावलीसह तुमच्या मधुमेहाच्या जोखमीचे मूल्यांकन करा.",
+        req: "आवश्यक चाचण्या: ग्लुकोज (OGTT/FBS), इन्सुलिन, रक्तदाब, बीएमआय (BMI).",
+        btn: "जोखीम तपासा"
       },
       bot: {
         title: "वैद्यकीय एआय बॉट",
-        desc: "कोणताही वैद्यकीय प्रश्न विचखा आणि आमच्या आरोग्य-केंद्रित एआय चॅटबॉटकडून त्वरित उत्तरे मिळवा.",
-        btn: "आता विचारा"
+        desc: "कोणताही वैद्यकीय प्रश्न विचारा आणि आमच्या आरोग्यावर केंद्रित एआय चॅटबॉटकरून त्वरित उत्तरे मिळवा.",
+        btn: "संवाद साधा"
       }
     },
     footer: "© २०२६ हेल्थ प्रिडिक्ट - वैद्यकीय जोखीम अंदाज एआय"

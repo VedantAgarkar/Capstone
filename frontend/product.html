@@ -34,7 +34,7 @@
         </ul>
       </nav>
       <div style="display: flex; gap: 10px; align-items: center;">
-        <select id="lang-select" style="padding: 5px; border-radius: 4px;">
+        <select id="lang-select" class="lang-select">
           <option value="en">English</option>
           <option value="mr">Marathi (मराठी)</option>
         </select>
@@ -53,6 +53,9 @@
         <p data-i18n="products.heart.desc">
           Get a comprehensive heart disease risk assessment based on your health metrics.
         </p>
+        <p class="req-text" data-i18n="products.heart.req">
+          <!-- Requirements will be injected here -->
+        </p>
         <a href="http://localhost:8501" class="card-btn" target="_blank" data-i18n="products.heart.btn">Try Now</a>
       </div>
       <!-- Card 2 -->
@@ -62,6 +65,9 @@
         <p data-i18n="products.parkinsons.desc">
           Assess your Parkinson's disease risk using advanced AI analysis.
         </p>
+        <p class="req-text" data-i18n="products.parkinsons.req">
+          <!-- Requirements will be injected here -->
+        </p>
         <a href="http://localhost:8503" class="card-btn" target="_blank" data-i18n="products.parkinsons.btn">Try Now</a>
       </div>
       <!-- Card 3 -->
@@ -70,6 +76,9 @@
         <h2 data-i18n="products.diabetes.title">Diabetes Risk Assessment</h2>
         <p data-i18n="products.diabetes.desc">
           Evaluate your diabetes risk with our comprehensive health questionnaire.
+        </p>
+        <p class="req-text" data-i18n="products.diabetes.req">
+          <!-- Requirements will be injected here -->
         </p>
         <a href="http://localhost:8502" class="card-btn" target="_blank" data-i18n="products.diabetes.btn">Try Now</a>
       </div>

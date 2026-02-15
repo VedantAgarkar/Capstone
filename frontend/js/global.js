@@ -9,7 +9,81 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Add smooth scrolling for anchor links
   initializeSmoothScroll();
+
+  // Initialize Language
+  initializeLanguage();
 });
+
+function initializeLanguage() {
+    const langSelect = document.getElementById('lang-select');
+    if (!langSelect) return;
+
+    // Check URL param first, then localStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlLang = urlParams.get('lang');
+    const savedLang = localStorage.getItem('healthpredict_lang') || 'en';
+    const currentLang = urlLang || savedLang;
+
+    // Set select value
+    langSelect.value = currentLang;
+    
+    // Update local storage if current language is different
+    if (currentLang !== savedLang) {
+        localStorage.setItem('healthpredict_lang', currentLang);
+    }
+
+    // Apply translations
+    updateLanguage(currentLang);
+
+    // Handle change with reload
+    langSelect.addEventListener('change', (e) => {
+        const newLang = e.target.value;
+        localStorage.setItem('healthpredict_lang', newLang);
+        
+        // Force reload with new lang param
+        const url = new URL(window.location);
+        url.searchParams.set('lang', newLang);
+        window.location.href = url.toString();
+    });
+}
+
+function updateLanguage(lang) {
+    if (!window.translations || !window.translations[lang]) return;
+
+    const t = window.translations[lang];
+
+    // 1. Update text content
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const text = getNestedProperty(t, key);
+        if (text) {
+            el.textContent = text;
+        }
+    });
+
+    // 1b. Update placeholders
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+        const key = el.getAttribute('data-i18n-ph');
+        const text = getNestedProperty(t, key);
+        if (text) {
+            el.placeholder = text;
+        }
+    });
+
+    // 2. Update Streamlit Links (Specific to Product Page)
+    // We want to force the 'lang' query param on localhost URLs
+    document.querySelectorAll('a[href^="http://localhost"]').forEach(link => {
+        const url = new URL(link.href);
+        url.searchParams.set('lang', lang);
+        link.href = url.toString();
+    });
+}
+
+function getNestedProperty(obj, path) {
+    return path.split('.').reduce((prev, curr) => {
+        return prev ? prev[curr] : null;
+    }, obj);
+}
 
 /**
  * Highlight the active navigation link based on current page
@@ -39,34 +113,4 @@ function initializeSmoothScroll() {
       }
     });
   });
-}
-
-/**
- * Utility function for toggling element visibility
- */
-function toggleElement(elementId) {
-  const element = document.getElementById(elementId);
-  if (element) {
-    element.style.display = element.style.display === 'none' ? 'block' : 'none';
-  }
-}
-
-/**
- * Utility function for adding CSS classes
- */
-function addClass(elementId, className) {
-  const element = document.getElementById(elementId);
-  if (element) {
-    element.classList.add(className);
-  }
-}
-
-/**
- * Utility function for removing CSS classes
- */
-function removeClass(elementId, className) {
-  const element = document.getElementById(elementId);
-  if (element) {
-    element.classList.remove(className);
-  }
 }

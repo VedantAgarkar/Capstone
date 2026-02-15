@@ -6,18 +6,79 @@ from dotenv import load_dotenv
 
 # Add parent directory to path for importing utils
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import apply_common_styling, apply_button_styling, render_navbar, load_model, get_openai_client, get_model_name, call_openai_api
+from utils import apply_common_styling, apply_button_styling, render_navbar, load_model, get_openai_client, get_model_name, call_openai_api, get_language, get_text
 
 # Load environment variables
 load_dotenv()
 
+# Get current language
+LANG = get_language()
+
+# ─────────────── Localization Dictionary for Diabetes App ─────────────── #
+LABELS = {
+    "en": {
+        "title": "🩺 Diabetes Risk Assessment",
+        "subtitle": "### Complete the form below for a comprehensive diabetes risk analysis",
+        "section1": "#### 👤 Demographics & Basic Information",
+        "age": "Age", "age_help": "Your age in years",
+        "pregnancies": "Number of Pregnancies", "preg_help": "Total number of times pregnant (0 if male or never pregnant)",
+        "sex": "Sex", "sex_help": "Biological sex",
+        "bmi": "BMI", "bmi_help": "Body Mass Index (weight in kg / height in m²)",
+        "section2": "#### 🩺 Clinical Measurements",
+        "glucose": "Glucose Level", "glucose_help": "Plasma glucose concentration (mg/dl)",
+        "bp": "Blood Pressure", "bp_help": "Diastolic blood pressure (mmHg)",
+        "skin": "Skin Thickness", "skin_help": "Triceps skin fold thickness (mm)",
+        "insulin": "Insulin Level", "insulin_help": "2-Hour serum insulin (mu U/ml)",
+        "pedigree": "Diabetes Pedigree Function", "pedigree_help": "Diabetes pedigree function (genetic influence)",
+        "section3": "#### 📋 Lifestyle & Medical History",
+        "family": "Family History of Diabetes", "family_help": "First-degree relative with diabetes",
+        "activity": "Physical Activity Level", "activity_help": "Your typical physical activity level",
+        "smoking": "Smoking Status", "smoking_help": "Current smoking status",
+        "diet": "Diet Quality", "diet_help": "Overall quality of your diet",
+        "hypertension": "Hypertension", "hyper_help": "Do you have high blood pressure?",
+        "sleep": "Average Sleep Hours", "sleep_help": "Average hours of sleep per night",
+        "analyzing": "🔄 Analyzing your diabetes risk data...",
+        "prompt_intro": "You are a medical AI assistant. Based on the following health metrics and AI model prediction, provide a comprehensive diabetes risk assessment:",
+        "download": "📥 Download Assessment"
+    },
+    "mr": {
+        "title": "🩺 मधुमेह जोखीम मूल्यांकन",
+        "subtitle": "### सर्वसमावेशक विश्लेषणासाठी खालील फॉर्म भरा",
+        "section1": "#### 👤 वैयक्तिक माहिती",
+        "age": "वय", "age_help": "तुमचे वय (वर्षे)",
+        "pregnancies": "गर्भधारणेची संख्या", "preg_help": "एकूण किती वेळा गर्भवती (पुरुष किंवा कधीही गर्भवती नसल्यास 0)",
+        "sex": "लिंग", "sex_help": "जैविक लिंग",
+        "bmi": "बीएमआय (BMI)", "bmi_help": "बॉडी मास इंडेक्स",
+        "section2": "#### 🩺 वैद्यकीय मोजमापे",
+        "glucose": "ग्लुकोज पातळी", "glucose_help": "प्लाझ्मा ग्लुकोज एकाग्रता (mg/dl)",
+        "bp": "रक्तदाब (Blood Pressure)", "bp_help": "डायस्टोलिक रक्तदाब (mmHg)",
+        "skin": "त्वचेची जाडी", "skin_help": "ट्रायसेप्स त्वचेची जाडी (mm)",
+        "insulin": "इन्सुलिन पातळी", "insulin_help": "2-तास सीरम इन्सुलिन (mu U/ml)",
+        "pedigree": "मधुमेह अनुवांशिकता (Pedigree)", "pedigree_help": "मधुमेह वंशावळ कार्य (अनुवांशिक प्रभाव)",
+        "section3": "#### 📋 जीवनशैली आणि वैद्यकीय इतिहास",
+        "family": "मधुमेहाचा कौटुंबिक इतिहास", "family_help": "आई, वडील किंवा भावंडांना मधुमेह आहे का?",
+        "activity": "शारीरिक हालचालींची पातळी", "activity_help": "तुमची नेहमीची शारीरिक हालचाल",
+        "smoking": "धूम्रपान स्थिती", "smoking_help": "सध्याची धूम्रपान स्थिती",
+        "diet": "आहाराचा दर्जा", "diet_help": "तुमच्या आहाराची एकूण गुणवत्ता",
+        "hypertension": "उच्च रक्तदाब (Hypertension)", "hyper_help": "तुम्हाला उच्च रक्तदाब आहे का?",
+        "sleep": "सरासरी झोपेचे तास", "sleep_help": "दररोज रात्री झोपेचे सरासरी तास",
+        "analyzing": "🔄 तुमच्या डेटाचे विश्लेषण करत आहे...",
+        "prompt_intro": "तुम्ही वैद्यकीय एआय सहाय्यक आहात. खालील आरोग्य मेट्रिक्स आणि एआय मॉडेलच्या अंदाजावर आधारित, कृपया मराठी भाषेत सर्वसमावेशक मधुमेह जोखीम मूल्यांकन द्या:",
+        "download": "📥 अहवाल डाउनलोड करा"
+    }
+}
+
+def L(key):
+    return LABELS.get(LANG, LABELS["en"]).get(key, key)
+
 # ──────────────⚙ Page Config────────────────────────── #
-st.set_page_config(layout="wide", page_title="HealthPredict - Diabetes Risk Assessment")
+st.set_page_config(layout="wide", page_title=f"HealthPredict - {L('title')}")
 
 # ───────────────🔐 API Setup ─────────────── #
 try:
     client = get_openai_client()
     openrouter_model = get_model_name()
+    # Assuming LANG is enforced by utils.call_openai_api system prompt as well
 except ValueError as e:
     st.error(f"Configuration Error: {str(e)}. Please set OPENROUTER_API_KEY in environment.")
     st.stop()
@@ -29,106 +90,111 @@ try:
     diabetes_scaler = pickle.load(open("backend/diabetes_scaler.sav", 'rb'))
 except:
     diabetes_scaler = None
-    st.warning("⚠️ Scaler not found. Predictions may be less accurate.")
+    if LANG == 'en':
+        st.warning("⚠️ Scaler not found. Predictions may be less accurate.")
+    else:
+        st.warning("⚠️ स्केलर सापडले नाही. अंदाज कमी अचूक असू शकतात.")
 
 # ──────────────🎨 Custom Styling────────────────────────── #
 apply_common_styling()
 apply_button_styling("diabetes")
 
 # ────────────── Navbar ─────────────── #
-render_navbar(" HealthPredict - Diabetes Risk")
+render_navbar(L('title'))
 
-st.title("🩺 Diabetes Risk Assessment")
-st.markdown("### Complete the form below for a comprehensive diabetes risk analysis")
+st.title(L('title'))
+st.markdown(L('subtitle'))
 st.divider()
 
 # ═══════════════════ SECTION 1: Demographics & Basic Info ═══════════════════
-st.markdown("#### 👤 Demographics & Basic Information")
+st.markdown(L('section1'))
 col1, col2 = st.columns(2)
 
 with col1:
-    age = st.number_input("Age", 
+    age = st.number_input(L('age'), 
                          min_value=18, max_value=120, value=45,
-                         help="Your age in years")
+                         help=L('age_help'))
     
-    pregnancies = st.number_input("Number of Pregnancies", 
+    pregnancies = st.number_input(L('pregnancies'), 
                                   min_value=0, max_value=20, value=0,
-                                  help="Total number of times pregnant (0 if male or never pregnant)")
+                                  help=L('preg_help'))
 
 with col2:
-    sex = st.selectbox("Sex", ["Male", "Female"],
-                      help="Biological sex")
+    sex_options = ["Male", "Female"] if LANG == 'en' else ["पुरुष", "स्त्री"]
+    sex = st.selectbox(L('sex'), sex_options,
+                      help=L('sex_help'))
     
-    bmi = st.number_input("BMI", 
+    bmi = st.number_input(L('bmi'), 
                          min_value=15.0, max_value=70.0, value=25.0, step=0.1,
-                         help="Body Mass Index (weight in kg / height in m²)")
+                         help=L('bmi_help'))
 
 st.divider()
 
 # ═══════════════════ SECTION 2: Clinical Measurements ═══════════════════
-st.markdown("#### 🩺 Clinical Measurements")
+st.markdown(L('section2'))
 col3, col4, col5 = st.columns(3)
 
 with col3:
-    glucose = st.number_input("Glucose Level", 
+    glucose = st.number_input(L('glucose'), 
                              min_value=0, max_value=250, value=100,
-                             help="Plasma glucose concentration (mg/dl)")
+                             help=L('glucose_help'))
     
-    blood_pressure = st.number_input("Blood Pressure", 
+    blood_pressure = st.number_input(L('bp'), 
                                      min_value=0, max_value=200, value=70,
-                                     help="Diastolic blood pressure (mmHg)")
+                                     help=L('bp_help'))
 
 with col4:
-    skin_thickness = st.number_input("Skin Thickness", 
+    skin_thickness = st.number_input(L('skin'), 
                                      min_value=0, max_value=100, value=20,
-                                     help="Triceps skin fold thickness (mm)")
+                                     help=L('skin_help'))
     
-    insulin = st.number_input("Insulin Level", 
+    insulin = st.number_input(L('insulin'), 
                              min_value=0, max_value=900, value=0,
-                             help="2-Hour serum insulin (mu U/ml)")
+                             help=L('insulin_help'))
 
 with col5:
-    diabetes_pedigree = st.number_input("Diabetes Pedigree Function", 
+    diabetes_pedigree = st.number_input(L('pedigree'), 
                                        min_value=0.0, max_value=2.5, value=0.5, step=0.001,
-                                       help="Diabetes pedigree function (genetic influence)")
+                                       help=L('pedigree_help'))
 
 st.divider()
 
 # ═══════════════════ SECTION 3: Lifestyle & Medical History ═══════════════════
-st.markdown("#### 📋 Lifestyle & Medical History")
+st.markdown(L('section3'))
 col6, col7, col8 = st.columns(3)
 
 with col6:
-    family_history = st.selectbox("Family History of Diabetes", 
-                                 ["No", "Yes"],
-                                 help="First-degree relative with diabetes")
+    fam_opts = ["No", "Yes"] if LANG == 'en' else ["नाही (No)", "होय (Yes)"]
+    family_history = st.selectbox(L('family'), fam_opts,
+                                 help=L('family_help'))
     
-    physical_activity = st.selectbox("Physical Activity Level", 
-                                    ["Sedentary", "Light", "Moderate", "Active"],
-                                    help="Your typical physical activity level")
+    act_opts = ["Sedentary", "Light", "Moderate", "Active"] if LANG == 'en' else ["बैठी जीवनशैली (Sedentary)", "हलका व्यायाम (Light)", "मध्यम (Moderate)", "सक्रिय (Active)"]
+    physical_activity = st.selectbox(L('activity'), act_opts,
+                                    help=L('activity_help'))
 
 with col7:
-    smoking = st.selectbox("Smoking Status", 
-                          ["Never", "Former", "Current"],
-                          help="Current smoking status")
+    smoke_opts = ["Never", "Former", "Current"] if LANG == 'en' else ["कधीच नाही (Never)", "माजी (Former)", "सध्या (Current)"]
+    smoking = st.selectbox(L('smoking'), smoke_opts,
+                          help=L('smoking_help'))
     
-    diet_quality = st.selectbox("Diet Quality", 
-                               ["Poor", "Fair", "Good", "Excellent"],
-                               help="Overall quality of your diet")
+    diet_opts = ["Poor", "Fair", "Good", "Excellent"] if LANG == 'en' else ["खराब (Poor)", "साधारण (Fair)", "चांगला (Good)", "उत्कृष्ट (Excellent)"]
+    diet_quality = st.selectbox(L('diet'), diet_opts,
+                               help=L('diet_help'))
 
 with col8:
-    hypertension = st.selectbox("Hypertension", 
-                               ["No", "Yes"],
-                               help="Do you have high blood pressure?")
+    hyp_opts = ["No", "Yes"] if LANG == 'en' else ["नाही", "होय"]
+    hypertension = st.selectbox(L('hypertension'), hyp_opts,
+                               help=L('hyper_help'))
     
-    sleep_hours = st.number_input("Average Sleep Hours", 
+    sleep_hours = st.number_input(L('sleep'), 
                                  min_value=3, max_value=12, value=7,
-                                 help="Average hours of sleep per night")
+                                 help=L('sleep_help'))
 
 st.divider()
 
 # Submit button
-if st.button("🔍 Assess Diabetes Risk", type="primary", use_container_width=True):
+submit_text = get_text("submit", LANG)
+if st.button(submit_text, type="primary", use_container_width=True):
     # Dataset features: Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age
     # Create feature array matching the dataset order
     features = np.array([[pregnancies, glucose, blood_pressure, skin_thickness, 
@@ -146,13 +212,14 @@ if st.button("🔍 Assess Diabetes Risk", type="primary", use_container_width=Tr
         prediction_proba = diabetes_model.predict_proba(features_scaled)[0]
         risk_percentage = prediction_proba[1] * 100 if len(prediction_proba) > 1 else 0
     except Exception as e:
-        st.error(f"❌ Error in model prediction: {e}")
+        err_msg = get_text("error", LANG) + str(e)
+        st.error(f"❌ {err_msg}")
         prediction = None
         risk_percentage = 0
     
     # Create assessment prompt
     assessment_prompt = f"""
-You are a medical AI assistant. Based on the following health metrics and AI model prediction, provide a comprehensive diabetes risk assessment:
+{L('prompt_intro')}
 
 MODEL PREDICTION RESULT:
 - Risk Percentage: {risk_percentage:.1f}%
@@ -184,17 +251,17 @@ Please provide:
 3. Protective Factors (if any)
 4. Lifestyle Modifications for Risk Reduction
 5. When to Consult an Endocrinologist
-
-Important: This is NOT a medical diagnosis. Always recommend consulting with a qualified healthcare provider.
-Keep the response clear, actionable, and between 400-600 words.
 """
-    
-    with st.spinner("🔄 Analyzing your diabetes risk data..."):
+    if LANG == "mr":
+         assessment_prompt += "\nImportant: Response MUST be in Marathi language."
+
+    with st.spinner(L('analyzing')):
         assessment = call_openai_api(client, assessment_prompt, openrouter_model, timeout=30)
         if assessment:
             st.session_state.assessment = assessment
             st.session_state.risk_percentage = risk_percentage
-            st.success("✅ Assessment Complete!")
+            success_msg = get_text("success", LANG)
+            st.success(f"✅ {success_msg}")
         else:
             st.error("❌ Failed to generate assessment. Please try again.")
 
@@ -202,21 +269,28 @@ Keep the response clear, actionable, and between 400-600 words.
 if st.session_state.get("assessment"):
     # Show risk percentage in a prominent way
     risk_pct = st.session_state.get("risk_percentage", 0)
-    if risk_pct > 70:
-        st.error(f"⚠️ **HIGH RISK**: {risk_pct:.1f}% probability of diabetes")
-    elif risk_pct > 40:
-        st.warning(f"⚠️ **MODERATE RISK**: {risk_pct:.1f}% probability of diabetes")
-    else:
-        st.success(f"✅ **LOW RISK**: {risk_pct:.1f}% probability of diabetes")
     
-    st.markdown("### 📋 Your Diabetes Risk Assessment:")
+    risk_labels = {
+        "high": get_text("high_risk", LANG),
+        "mod": get_text("moderate_risk", LANG),
+        "low": get_text("low_risk", LANG)
+    }
+
+    if risk_pct > 70:
+        st.error(f"⚠️ **{risk_labels['high']}**: {risk_pct:.1f}% probability")
+    elif risk_pct > 40:
+        st.warning(f"⚠️ **{risk_labels['mod']}**: {risk_pct:.1f}% probability")
+    else:
+        st.success(f"✅ **{risk_labels['low']}**: {risk_pct:.1f}% probability")
+    
+    st.markdown("### 📋 Result:")
     st.write(st.session_state.assessment)
     
     # Download button
     st.download_button(
-        label="📥 Download Assessment",
+        label=L('download'),
         data=st.session_state.assessment,
-        file_name="diabetes_risk_assessment.txt",
+        file_name=f"diabetes_risk_assessment_{LANG}.txt",
         mime="text/plain"
     )
 
@@ -238,6 +312,6 @@ st.markdown("""
     </style>
 
     <div class="footer">
-        &copy; 2025 HealthPredict | Medical Risk Assessment AI - Not a substitute for professional medical advice
+        &copy; 2026 HealthPredict | Medical Risk Assessment AI
     </div>
 """, unsafe_allow_html=True)

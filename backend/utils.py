@@ -91,6 +91,51 @@ def load_model(model_path):
     import joblib
     return joblib.load(model_path)
 
+# ─────────────── Localization ─────────────── #
+TRANSLATIONS = {
+    "en": {
+        "submit": "Submit Assessment",
+        "assessing": "Analyzing data...",
+        "success": "Assessment Complete!",
+        "error": "Error: ",
+        "high_risk": "HIGH RISK",
+        "moderate_risk": "MODERATE RISK",
+        "low_risk": "LOW RISK"
+    },
+    "mr": {
+        "submit": "जोखीम तपासा",
+        "assessing": "डेटाचे विश्लेषण करत आहे...", 
+        "success": "मूल्यांकन पूर्ण झाले!",
+        "error": "त्रुटी: ",
+        "high_risk": "उच्च धोका",
+        "moderate_risk": "मध्यम धोका",
+        "low_risk": "कमी धोका"
+    }
+}
+
+def get_language():
+    """
+    Get current language from query parameters.
+    Defaults to 'en' if not present or invalid.
+    """
+    try:
+        # Streamlit 1.30+ uses st.query_params
+        # Check if 'lang' is in query params
+        qp = st.query_params
+        lang = qp.get("lang", "en")
+        # Handle if it returns a list (older versions) or string
+        if isinstance(lang, list):
+            return lang[0] if lang else "en"
+        return lang if lang in ["en", "mr"] else "en"
+    except:
+        return "en"
+
+def get_text(key, lang=None):
+    """Get translated text for a key."""
+    if lang is None:
+        lang = get_language()
+    return TRANSLATIONS.get(lang, TRANSLATIONS["en"]).get(key, key)
+
 # ─────────────── API Call Wrapper ─────────────── #
 def call_openai_api(client, prompt, model=None, timeout=30):
     """
@@ -108,11 +153,17 @@ def call_openai_api(client, prompt, model=None, timeout=30):
     if model is None:
         model = get_model_name()
     
+    lang = get_language()
+    system_instruction = "You are a helpful medical information assistant. Always remind users to consult healthcare professionals for medical advice."
+    
+    if lang == "mr":
+        system_instruction += " PLEASE RESPOND IN MARATHI LANGUAGE (मराठी). Transliterate technical medical terms if necessary but keep the explanation in Marathi."
+    
     try:
         response = client.chat.completions.create(
             model=model,
             messages=[
-                {"role": "system", "content": "You are a helpful medical information assistant. Always remind users to consult healthcare professionals for medical advice."},
+                {"role": "system", "content": system_instruction},
                 {"role": "user", "content": prompt}
             ],
             timeout=timeout

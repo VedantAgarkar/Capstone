@@ -19,13 +19,19 @@
     <div class="logo-text">🏥<span class="logo-text">HealthPredict</span></div>
     <nav>
       <ul class="nav-menu">
-        <li><a href="index.html" class="nav-link active">Homepage</a></li>
-        <li><a href="product.html" class="nav-link">Products</a></li>
-        <li><a href="help.html" class="nav-link">Help</a></li>
-        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="index.html" class="nav-link active" data-i18n="nav.home">Homepage</a></li>
+        <li><a href="product.html" class="nav-link" data-i18n="nav.products">Products</a></li>
+        <li><a href="help.html" class="nav-link" data-i18n="nav.help">Help</a></li>
+        <li><a href="about.html" class="nav-link" data-i18n="nav.about">About</a></li>
       </ul>
     </nav>
-    <a href="login.html" class="login-btn">Login</a>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <select id="lang-select" style="padding: 5px; border-radius: 4px;">
+        <option value="en">English</option>
+        <option value="mr">Marathi (मराठी)</option>
+      </select>
+      <a href="login.html" class="login-btn" data-i18n="nav.login">Login</a>
+    </div>
   </div>
   </header>
   <!-- HERO BANNER -->
@@ -33,16 +39,15 @@
   background-repeat:no-repeat">
     <div class="hero-content">
       <div class="hero-left">
-        <h1 style="color: #B79347;">Your Personal Health AI Advisor</h1>
-        <p class="hero-desc" style="color:#24234D; font-weight:bold">
+        <h1 style="color: #B79347;" data-i18n="hero.title_home">Your Personal Health AI Advisor</h1>
+        <p class="hero-desc" style="color:#24234D; font-weight:bold" data-i18n="hero.subtitle_home">
           Predict, Analyze, and Monitor health conditions with HealthPredict
-          </h1>
-        </p>
+        </p> <!-- Fixed closed tag issue -->
         <ul style="font-size: 18px; color:#24234D; font-weight:bold">
-          <li>Heart Disease Detection</li>
-          <li>Parkinson's Diagnosis</li>
-          <li>Diabetes Prediction</li>
-          <li>24/7 Health Monitoring</li>
+          <li data-i18n="hero.list.0">Heart Disease Detection</li>
+          <li data-i18n="hero.list.1">Parkinson's Diagnosis</li>
+          <li data-i18n="hero.list.2">Diabetes Prediction</li>
+          <li data-i18n="hero.list.3">24/7 Health Monitoring</li>
         </ul>
 
 
@@ -66,29 +71,33 @@
 
   <!-- Key Metrics Strip -->
   <section class="metrics-strip">
-    <div class="metrics-block"><span>50k+</span><br>Health Assessments</div>
-    <div class="metrics-block"><span>98%</span><br>Accuracy Rate</div>
-    <div class="metrics-block"><span>13k</span><br>Cases Covered</div>
-    <div class="metrics-block"><span>24/7</span><br>Available</div>
+    <div class="metrics-block"><span>50k+</span><br><span data-i18n="metrics.assessments">Health Assessments</span>
+    </div>
+    <div class="metrics-block"><span>98%</span><br><span data-i18n="metrics.accuracy">Accuracy Rate</span></div>
+    <div class="metrics-block"><span>13k</span><br><span data-i18n="metrics.cases">Cases Covered</span></div>
+    <div class="metrics-block"><span>24/7</span><br><span data-i18n="metrics.available">Available</span></div>
   </section>
 
   <!-- Health Solutions -->
   <section class="legal-solutions">
-    <h2>Your Health Solutions</h2>
+    <h2 data-i18n="solutions.title">Your Health Solutions</h2>
     <div class="solutions-btns">
-      <a href="" class="solution-btn">Heart Disease Risk</a>
-      <a href="" class="solution-btn">Parkinson's Detection</a>
-      <a href="" class="solution-btn">Diabetes Prediction</a>
-      <a href="" class=""></a>
-      <a href="" class="solution-btn">Health Chatbot</a>
+      <a href="http://localhost:8501" class="solution-btn" target="_blank" data-i18n="solutions.heart">Heart Disease
+        Risk</a>
+      <a href="http://localhost:8503" class="solution-btn" target="_blank" data-i18n="solutions.parkinsons">Parkinson's
+        Detection</a>
+      <a href="http://localhost:8502" class="solution-btn" target="_blank" data-i18n="solutions.diabetes">Diabetes
+        Prediction</a>
+      <a href="http://localhost:8504" class="solution-btn" target="_blank" data-i18n="solutions.bot">Health Chatbot</a>
     </div>
   </section>
 
   <footer>
-    <p>© 2026 HealthPredict</p>
+    <p data-i18n="footer">© 2026 HealthPredict</p>
   </footer>
 
   <!-- Global and Page-specific Scripts -->
+  <script src="./js/translations.js"></script>
   <script src="./js/global.js" defer></script>
   <script src="./js/home.js" defer></script>
 

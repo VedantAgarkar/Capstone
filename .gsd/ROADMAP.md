@@ -59,6 +59,30 @@ updated: 2026-02-22
 | 1 | ✅ | 2/2 | 100% |
 | 2 | ✅ | 2/2 | 100% |
 | 3 | ✅ | 1/1 | 100% |
+| 4 | ⬜ | 0/2 | 0% |
+| 5 | ⬜ | 0/2 | 0% |
+
+---
+
+### Phase 4: Admin Infrastructure & Backend
+**Status:** ⬜ Not Started
+**Objective:** Evolve the database schema to support admin roles and data tracking.
+**Requirements:** `is_admin` column, `predictions` table, stats API.
+
+**Plans:**
+- [ ] Plan 4.1: Schema Update & Admin Creation
+- [ ] Plan 4.2: Admin Stats API
+
+---
+
+### Phase 5: Bento Box Admin Dashboard
+**Status:** ⬜ Not Started
+**Objective:** Create a premium Bento Box style dashboard for admins.
+**Requirements:** `dashboard.html`, `dashboard.js`, conditional navbar link.
+
+**Plans:**
+- [ ] Plan 5.1: Conditional Dashboard Navigation
+- [ ] Plan 5.2: Bento Box UI Implementation
 
 ---
 

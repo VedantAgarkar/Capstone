@@ -11,10 +11,9 @@ updated: 2026-02-22
 
 ## Must-Haves (from SPEC)
 
-- [ ] SQLite database for user storage
-- [ ] Parameterized queries to prevent SQLi
-- [ ] /register and /login API endpoints
-- [ ] Frontend integration with backend API
+- [x] Admin infrastructure (is_admin, predictions table)
+- [x] Admin Stats API
+- [ ] Bento Box Admin Dashboard UI
 
 ---
 
@@ -59,19 +58,19 @@ updated: 2026-02-22
 | 1 | ✅ | 2/2 | 100% |
 | 2 | ✅ | 2/2 | 100% |
 | 3 | ✅ | 1/1 | 100% |
-| 4 | ⬜ | 0/2 | 0% |
+| 4 | ✅ | 2/2 | 100% |
 | 5 | ⬜ | 0/2 | 0% |
 
 ---
 
 ### Phase 4: Admin Infrastructure & Backend
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Objective:** Evolve the database schema to support admin roles and data tracking.
 **Requirements:** `is_admin` column, `predictions` table, stats API.
 
 **Plans:**
-- [ ] Plan 4.1: Schema Update & Admin Creation
-- [ ] Plan 4.2: Admin Stats API
+- [x] Plan 4.1: Schema Update & Admin Creation
+- [x] Plan 4.2: Admin Stats API
 
 ---
 

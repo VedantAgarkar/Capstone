@@ -78,11 +78,50 @@ async def login(user: UserLogin):
             "message": "Login successful",
             "user": {
                 "email": db_user["email"],
-                "fullname": db_user["fullname"]
+                "fullname": db_user["fullname"],
+                "is_admin": bool(db_user["is_admin"])
             }
         }
     else:
         raise HTTPException(status_code=401, detail="Invalid email or password")
+
+@app.get("/api/admin/stats")
+async def get_admin_stats(email: str):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Check if user is admin
+    cursor.execute("SELECT is_admin FROM users WHERE email = ?", (email,))
+    user = cursor.fetchone()
+    
+    if not user or not user["is_admin"]:
+        conn.close()
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Get total user count
+    cursor.execute("SELECT COUNT(*) as count FROM users")
+    user_count = cursor.fetchone()["count"]
+    
+    # Get recent predictions
+    cursor.execute("""
+        SELECT p.*, u.fullname 
+        FROM predictions p 
+        JOIN users u ON p.user_id = u.id 
+        ORDER BY timestamp DESC LIMIT 10
+    """)
+    recent_predictions = [dict(row) for row in cursor.fetchall()]
+    
+    # Get prediction breakdown
+    cursor.execute("SELECT type, COUNT(*) as count FROM predictions GROUP BY type")
+    breakdown = {row["type"]: row["count"] for row in cursor.fetchall()}
+    
+    conn.close()
+    
+    return {
+        "total_users": user_count,
+        "recent_predictions": recent_predictions,
+        "prediction_breakdown": breakdown
+    }
 
 app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 

@@ -17,13 +17,34 @@ def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # Create users table with parameterized query (schema design)
+    # Create users table if not exists
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
-            fullname TEXT NOT NULL
+            fullname TEXT NOT NULL,
+            is_admin INTEGER DEFAULT 0
+        )
+    ''')
+
+    # Ensure is_admin column exists if table was already created
+    try:
+        cursor.execute('ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0')
+    except sqlite3.OperationalError:
+        # Column already exists
+        pass
+
+    # Create predictions table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS predictions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            type TEXT NOT NULL,
+            inputs TEXT NOT NULL,
+            outcome TEXT NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
         )
     ''')
     

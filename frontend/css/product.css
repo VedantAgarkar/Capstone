@@ -31,7 +31,7 @@ body {
 .product-card {
   background: #fff;
   border-radius: 18px;
-  box-shadow: 0 2px 16px 0 rgba(44,44,45,0.10);
+  box-shadow: 0 2px 16px 0 rgba(44, 44, 45, 0.10);
   padding: 36px 30px 28px 30px;
   width: 258px;
   text-align: center;
@@ -40,12 +40,22 @@ body {
   align-items: center;
   color: #18192b;
   border: 1.2px solid #efefef;
-  transition: box-shadow 0.19s, border-color 0.19s, transform 0.21s;
+  /* Updated transitions for animation + hover */
+  transition: box-shadow 0.19s, border-color 0.19s, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease-out;
+
+  /* Initial hidden state for stagger animation */
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.product-card.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .product-card:hover {
   border-color: #B79347;
-  box-shadow: 0 9px 28px 0 rgba(183,147,71,0.18);
+  box-shadow: 0 9px 28px 0 rgba(183, 147, 71, 0.18);
   transform: translateY(-3px) scale(1.025);
 }
 
@@ -82,6 +92,7 @@ body {
   font-size: 1.07rem;
   transition: background 0.2s, color 0.2s;
 }
+
 .card-btn:hover {
   background: #cfab42;
   color: #06061C;
@@ -89,35 +100,48 @@ body {
 
 /* Responsive */
 @media (max-width: 1100px) {
-  .cards-row { gap: 22px; }
-  .product-card { width: 200px; padding: 30px 16px 18px 16px; }
-}
-@media (max-width: 800px) {
-  .cards-row { flex-wrap: wrap; justify-content: center; }
-}
-@media (max-width: 600px) {
-  .product-heading { font-size: 1.15rem; margin-top: 28px; margin-bottom: 14px; }
-  .cards-row { flex-direction: column; align-items: center; gap: 18px; }
-  .product-card { width: 94vw; min-width: 0; }
+  .cards-row {
+    gap: 22px;
+  }
+
+  .product-card {
+    width: 200px;
+    padding: 30px 16px 18px 16px;
+  }
 }
 
-/* Add shimmer animation to product cards on hover */
+@media (max-width: 800px) {
+  .cards-row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .product-heading {
+    font-size: 1.15rem;
+    margin-top: 28px;
+    margin-bottom: 14px;
+  }
+
+  .cards-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .product-card {
+    width: 94vw;
+    min-width: 0;
+  }
+}
+
+/* Add shimmer animation to product cards on hover - consolidated properties */
 .product-card {
   position: relative;
   overflow: hidden;
-  transition: box-shadow 0.19s, border-color 0.19s, transform 0.21s;
-  /* Existing styles here */
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 2px 16px 0 rgba(44,44,45,0.10);
-  padding: 36px 30px 28px 30px;
-  width: 258px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #18192b;
-  border: 1.2px solid #efefef;
+  /* Ensure transition matches the one defined above for stagger animation */
+  transition: box-shadow 0.19s, border-color 0.19s, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease-out;
 }
 
 /* Shimmer effect overlay */
@@ -128,12 +152,10 @@ body {
   left: -75%;
   width: 50%;
   height: 200%;
-  background: linear-gradient(
-    120deg,
-    rgba(215, 183, 77, 0) 0%,
-    rgba(215, 183, 77, 0.4) 50%,
-    rgba(215, 183, 77, 0) 100%
-  );
+  background: linear-gradient(120deg,
+      rgba(215, 183, 77, 0) 0%,
+      rgba(215, 183, 77, 0.4) 50%,
+      rgba(215, 183, 77, 0) 100%);
   transform: skewX(-25deg);
   transition: opacity 0.4s ease;
   opacity: 0;
@@ -146,6 +168,7 @@ body {
   0% {
     left: -75%;
   }
+
   100% {
     left: 125%;
   }
@@ -175,12 +198,14 @@ body {
 /* On hover, start shimmer and sparkle */
 .product-card:hover::before {
   opacity: 1;
-  animation: shimmerMove 1.6s linear infinite; /* faster by 20% */
+  animation: shimmerMove 1.6s linear infinite;
+  /* faster by 20% */
 }
 
 .product-card:hover::after {
   opacity: 1;
-  animation: sparkleTwinkle 1.5s ease-in-out infinite alternate; /* sparkle speed unchanged */
+  animation: sparkleTwinkle 1.5s ease-in-out infinite alternate;
+  /* sparkle speed unchanged */
 }
 
 /* Sparkle twinkle animation */
@@ -189,7 +214,56 @@ body {
     opacity: 0.8;
     filter: brightness(1);
   }
+
   100% {
     opacity: 1;
-    filter: brightness;
+    filter: brightness(1.5);
   }
+}
+
+/* Particle Canvas */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, #faf9f6 0%, #f0f0f0 100%);
+}
+
+/* Spotlight Effect on Card Hover - enhancing existing hover */
+.product-card:hover {
+  /* Dynamic spotlight border effect simulation using box-shadow */
+  box-shadow:
+    0 9px 28px 0 rgba(183, 147, 71, 0.18),
+    0 0 20px 2px rgba(183, 147, 71, 0.1);
+  /* Soft glow */
+  border-color: rgba(183, 147, 71, 0.6);
+  transform: translateY(-3px) scale(1.025);
+}
+
+/* Ensure card text is above particles if z-index issues arise */
+.product-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 16px 0 rgba(44, 44, 45, 0.10);
+  padding: 36px 30px 28px 30px;
+  width: 258px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #18192b;
+  border: 1.2px solid #efefef;
+  /* Updated transitions for animation + hover */
+  transition: box-shadow 0.19s, border-color 0.19s, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease-out;
+
+  /* Initial hidden state for stagger animation */
+  opacity: 0;
+  transform: translateY(40px);
+  z-index: 1;
+  background: white;
+  /* Ensure non-transparent */
+}

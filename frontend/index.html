@@ -15,7 +15,16 @@
 </head>
 
 <body>
-  <div class="navbar">
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader-content">
+      <div class="heart-icon">❤️</div>
+      <h2>HealthPredict</h2>
+      <div class="loader-bar"></div>
+    </div>
+  </div>
+
+  <div class="navbar" id="navbar">
     <div class="logo-text">🏥<span class="logo-text">HealthPredict</span></div>
     <nav>
       <ul class="nav-menu">
@@ -95,6 +104,19 @@
   <footer>
     <p data-i18n="footer">© 2026 HealthPredict</p>
   </footer>
+
+  <!-- Floating Chatbot Button -->
+  <a href="http://localhost:8504" class="chatbot-fab" target="_blank" title="Chat with HealthPredict Bot">
+    <div class="chatbot-tooltip">Need Help? Chat with AI</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z" />
+      <path d="M0 0h24v24H0z" fill="none" />
+      <circle cx="15" cy="10" r="1.5" />
+      <circle cx="9" cy="10" r="1.5" />
+      <path
+        d="M12 16c2.03 0 3.8-1.11 4.75-2.75.19-.33-.05-.75-.44-.75H7.69c-.38 0-.63.42-.44.75.95 1.64 2.72 2.75 4.75 2.75z" />
+    </svg>
+  </a>
 
   <!-- Global and Page-specific Scripts -->
   <script src="./js/translations.js"></script>

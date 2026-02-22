@@ -342,7 +342,8 @@ def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Prov
     
     if os.path.exists(font_path):
         try:
-            pdf.add_font('MarathiFont', '', font_path, uni=True)
+            # FPDF2 syntax: fname=font_path
+            pdf.add_font("MarathiFont", style="", fname=font_path)
             has_unicode_font = True
         except:
             has_unicode_font = False
@@ -431,9 +432,14 @@ def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Prov
             pdf.ln(6)
             
     # Return PDF bytes
+    # FPDF2 output() returns bytes or bytearray depending on version
+    # Streamlit requires bytes, str, or io.BytesIO
     try:
-        return pdf.output(dest='S').encode('latin-1', 'replace') 
+        pdf_data = pdf.output()
+        if isinstance(pdf_data, bytearray):
+            return bytes(pdf_data)
+        return pdf_data
     except Exception as e:
-        # If encoding fails, fallback to string conversion
-        return str(pdf.output(dest='S')).encode('latin-1', 'replace') 
+        print(f"PDF Output Error: {e}")
+        return b"" 
 

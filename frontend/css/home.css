@@ -24,6 +24,98 @@ header {
   align-items: center;
   padding: 0 2.5rem;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  background: rgba(6, 6, 28, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Preloader Styles */
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #06061C;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease-out;
+}
+
+.loader-content {
+  text-align: center;
+  color: white;
+}
+
+.heart-icon {
+  font-size: 60px;
+  animation: heartPulse 1.5s infinite;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.loader-content h2 {
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 2px;
+  color: #B79347;
+  margin-bottom: 20px;
+}
+
+.loader-bar {
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.loader-bar::after {
+  content: '';
+  display: block;
+  width: 40%;
+  height: 100%;
+  background: #B79347;
+  animation: loadingBar 1s infinite ease-in-out;
+}
+
+@keyframes heartPulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes loadingBar {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+.preloader-hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .logo {
@@ -136,12 +228,12 @@ footer {
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    radial-gradient(circle at var(--mouse-x, 20%) var(--mouse-y, 30%), 
-      rgba(231, 76, 60, 0.1) 0%, 
+  background:
+    radial-gradient(circle at var(--mouse-x, 20%) var(--mouse-y, 30%),
+      rgba(231, 76, 60, 0.1) 0%,
       transparent 50%),
-    radial-gradient(circle at var(--mouse-x, 80%) var(--mouse-y, 70%), 
-      rgba(52, 152, 219, 0.1) 0%, 
+    radial-gradient(circle at var(--mouse-x, 80%) var(--mouse-y, 70%),
+      rgba(52, 152, 219, 0.1) 0%,
       transparent 50%);
   animation: medicalGlow 20s ease-in-out infinite;
   pointer-events: none;
@@ -149,17 +241,19 @@ footer {
 
 @keyframes medicalGlow {
   0% {
-    background: 
+    background:
       radial-gradient(circle at 20% 30%, rgba(231, 76, 60, 0.1) 0%, transparent 50%),
       radial-gradient(circle at 80% 70%, rgba(52, 152, 219, 0.1) 0%, transparent 50%);
   }
+
   50% {
-    background: 
+    background:
       radial-gradient(circle at 60% 40%, rgba(39, 174, 96, 0.1) 0%, transparent 50%),
       radial-gradient(circle at 30% 60%, rgba(155, 89, 182, 0.1) 0%, transparent 50%);
   }
+
   100% {
-    background: 
+    background:
       radial-gradient(circle at 20% 30%, rgba(231, 76, 60, 0.1) 0%, transparent 50%),
       radial-gradient(circle at 80% 70%, rgba(52, 152, 219, 0.1) 0%, transparent 50%);
   }
@@ -189,12 +283,15 @@ footer {
 
 
 @keyframes titleWave {
-  0%, 100% {
+
+  0%,
+  100% {
     background: linear-gradient(135deg, #e74c3c, #3498db, #27ae60);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
   50% {
     background: linear-gradient(135deg, #3498db, #27ae60, #e74c3c);
     -webkit-background-clip: text;
@@ -214,6 +311,7 @@ footer {
     width: 0;
     opacity: 0;
   }
+
   100% {
     width: 100%;
     opacity: 1;
@@ -283,6 +381,7 @@ footer {
     opacity: 0;
     transform: translateX(-50px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -294,6 +393,7 @@ footer {
     opacity: 0;
     transform: translateY(40px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -343,6 +443,7 @@ footer {
     opacity: 0;
     transform: scale(0.5);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -362,14 +463,15 @@ footer {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.metrics-block br ~ text,
-.metrics-block br ~ span {
+.metrics-block br~text,
+.metrics-block br~span {
   font-size: 14px;
   color: #bdc3c7;
   font-weight: 400;
@@ -398,6 +500,7 @@ footer {
     opacity: 0;
     transform: translateY(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -410,25 +513,63 @@ footer {
   gap: 30px;
   max-width: 1000px;
   margin: 0 auto;
+  perspective: 1000px;
+  /* Enable 3D perspective */
+}
+
+/* Scroll Animation Classes */
+.scroll-hidden {
+  opacity: 0 !important;
+  transform: translateY(50px) !important;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out !important;
+}
+
+.scroll-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
 .solution-btn {
-  padding: 25px;
-  background: rgba(52, 152, 219, 0.1);
-  border: 2px solid var(--medical-blue);
-  border-radius: 12px;
+  padding: 30px;
+  background: rgba(26, 35, 50, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
   color: var(--light-text);
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-  animation: fadeInUp 0.8s ease-out backwards;
+
+  /* Transition for hover/tilt - IMPORTANT: removed 'transform' from transition to let JS handle it fast, 
+     but we need box-shadow transition */
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+
   position: relative;
   overflow: hidden;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-family: 'Orbitron', sans-serif;
+
+  /* 3D Tilt Props */
+  transform-style: preserve-3d;
+  transform: perspective(1000px) rotateX(var(--rotateX, 0deg)) rotateY(var(--rotateY, 0deg));
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+
+
+.solution-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.solution-btn:hover::after {
+  opacity: 1;
 }
 
 .solution-btn:nth-child(1) {
@@ -496,28 +637,28 @@ footer {
   .hero-left h1 {
     font-size: 36px;
   }
-  
+
   .hero-desc {
     font-size: 16px !important;
   }
-  
+
   .metrics-strip {
     padding: 40px 20px;
     gap: 20px;
   }
-  
+
   .legal-solutions {
     padding: 60px 20px;
   }
-  
+
   .legal-solutions h2 {
     font-size: 32px;
   }
-  
+
   .solutions-btns {
     gap: 20px;
   }
-  
+
   .solution-btn {
     padding: 20px;
     font-size: 14px;
@@ -528,11 +669,11 @@ footer {
   .hero-left h1 {
     font-size: 28px;
   }
-  
+
   .hero-desc {
     font-size: 14px !important;
   }
-  
+
   .hero-left ul {
     grid-template-columns: 1fr;
   }
@@ -549,10 +690,84 @@ footer {
 }
 
 @keyframes highlightPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.7;
+  }
+}
+
+/* Floating Chatbot Button */
+.chatbot-fab {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 65px;
+  height: 65px;
+  background: linear-gradient(135deg, #3498db, #2c3e50);
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  border: 2px solid white;
+}
+
+.chatbot-fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
+}
+
+.chatbot-fab svg {
+  width: 32px;
+  height: 32px;
+  fill: white;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.chatbot-fab:hover svg {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.chatbot-tooltip {
+  position: absolute;
+  right: 80px;
+  background-color: white;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+
+.chatbot-fab:hover .chatbot-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+  .chatbot-fab {
+    bottom: 20px;
+    right: 20px;
+    width: 55px;
+    height: 55px;
+  }
+
+  .chatbot-tooltip {
+    display: none;
   }
 }

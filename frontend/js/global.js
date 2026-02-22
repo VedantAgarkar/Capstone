@@ -28,6 +28,16 @@ function checkAuthState() {
         loginBtn.href = '#';
         loginBtn.classList.add('user-profile-btn');
         
+        // Inject Dashboard link if admin
+        if (user.is_admin) {
+            const navMenu = document.querySelector('.nav-menu');
+            if (navMenu && !document.querySelector('.dashboard-nav-link')) {
+                const dashboardLi = document.createElement('li');
+                dashboardLi.innerHTML = '<a href="dashboard.html" class="nav-link dashboard-nav-link">Dashboard</a>';
+                navMenu.appendChild(dashboardLi);
+            }
+        }
+        
         // Add logout on click with confirmation
         loginBtn.addEventListener('click', (e) => {
             e.preventDefault();

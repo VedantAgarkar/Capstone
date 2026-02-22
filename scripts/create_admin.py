@@ -31,5 +31,5 @@ def create_admin(email):
     print(f"Admin setup complete for {email}")
 
 if __name__ == "__main__":
-    target_email = "admin@test.com"
+    target_email = "vedantagarkar98@proton.me"
     create_admin(target_email)

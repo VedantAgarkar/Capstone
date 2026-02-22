@@ -1,0 +1,220 @@
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent-blue: #4facfe;
+    --accent-purple: #00f2fe;
+    --text-muted: rgba(255, 255, 255, 0.6);
+}
+
+body {
+    background: radial-gradient(circle at top right, #1a1a2e, #16213e, #0f3460);
+    min-height: 100vh;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    margin: 0;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 80px auto 40px;
+    padding: 20px;
+}
+
+.dashboard-header {
+    margin-bottom: 40px;
+}
+
+.dashboard-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    background: linear-gradient(to right, #fff, var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dashboard-header p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+/* Bento Grid */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 200px);
+    gap: 20px;
+}
+
+.bento-item {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 24px;
+    transition: transform 0.3s ease, background 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.bento-item:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.bento-item h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* Specific Card Layouts */
+.card-total-users {
+    grid-column: span 1;
+    grid-row: span 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.card-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.card-breakdown {
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+.breakdown-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.breakdown-label {
+    font-size: 0.9rem;
+}
+
+.breakdown-count {
+    background: var(--accent-blue);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.card-health {
+    grid-column: span 2;
+    grid-row: span 1;
+}
+
+.health-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.status-dot.online {
+    background: #00ff88;
+    box-shadow: 0 0 10px #00ff88;
+}
+
+.status-text {
+    font-weight: 600;
+    color: #00ff88;
+}
+
+.health-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.card-recent {
+    grid-column: span 4;
+    grid-row: span 1;
+}
+
+/* Table Styling */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th {
+    text-align: left;
+    padding: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+td {
+    padding: 12px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.loading-text {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 20px;
+}
+
+/* Responsiveness */
+@media (max-width: 900px) {
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+    }
+
+    .card-total-users,
+    .card-breakdown,
+    .card-health,
+    .card-recent {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .card-total-users,
+    .card-breakdown,
+    .card-health,
+    .card-recent {
+        grid-column: span 4;
+    }
+}

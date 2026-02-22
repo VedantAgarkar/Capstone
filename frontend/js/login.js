@@ -99,17 +99,33 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     loginBtn.classList.add('loading');
     
     try {
-        // Simulate API call (replace with actual backend call)
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Success - redirect to dashboard
-        alert('Login successful! Redirecting to dashboard...');
-        // window.location.href = 'index.html'; // Uncomment to redirect
+        const response = await fetch('http://localhost:8000/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Success - save user data and redirect to dashboard
+            localStorage.setItem('user', JSON.stringify(result.user));
+            alert('Login successful! Redirecting to dashboard...');
+            window.location.href = 'index.html';
+        } else {
+            // Handle error from backend (e.g., 401 Invalid credentials)
+            showError('email', 'emailError', result.detail || 'Login failed. Please try again.');
+        }
         
         loginBtn.classList.remove('loading');
     } catch (error) {
         console.error('Login error:', error);
-        showError('email', 'emailError', 'Login failed. Please try again.');
+        showError('email', 'emailError', 'Connection error. Is the server running?');
         loginBtn.classList.remove('loading');
     }
 });

@@ -154,17 +154,33 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     signupBtn.classList.add('loading');
     
     try {
-        // Simulate API call (replace with actual backend call)
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Success - redirect to login page
-        alert('Account created successfully! Please sign in.');
-        window.location.href = 'login.html';
+        const response = await fetch('http://localhost:8000/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                fullname: fullname,
+                email: email,
+                password: password
+            }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Success - redirect to login page
+            alert('Account created successfully! Please sign in.');
+            window.location.href = 'login.html';
+        } else {
+            // Handle error from backend (e.g., 400 Email already registered)
+            showError('email', 'emailError', result.detail || 'Signup failed. Please try again.');
+        }
         
         signupBtn.classList.remove('loading');
     } catch (error) {
         console.error('Signup error:', error);
-        showError('email', 'emailError', 'Signup failed. Please try again.');
+        showError('email', 'emailError', 'Connection error. Is the server running?');
         signupBtn.classList.remove('loading');
     }
 });

@@ -12,7 +12,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize Language
   initializeLanguage();
+
+  // Check authentication state
+  checkAuthState();
 });
+
+function checkAuthState() {
+    const userJson = localStorage.getItem('user');
+    const loginBtn = document.querySelector('.login-btn');
+    
+    if (userJson && loginBtn) {
+        const user = JSON.parse(userJson);
+        // Replace "Login" button with User Name and Logout option
+        loginBtn.innerHTML = `👤 ${user.fullname}`;
+        loginBtn.href = '#';
+        loginBtn.classList.add('user-profile-btn');
+        
+        // Add logout on click with confirmation
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('Do you want to logout?')) {
+                localStorage.removeItem('user');
+                alert('Logged out successfully');
+                window.location.reload();
+            }
+        });
+    }
+}
 
 function initializeLanguage() {
     const langSelect = document.getElementById('lang-select');

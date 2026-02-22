@@ -21,13 +21,13 @@ updated: 2026-02-22
 ## Phases
 
 ### Phase 1: Backend Foundation (SQLite + API Setup)
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Objective:** Set up the SQLite database and create the initial FastAPI endpoints for auth.
 **Requirements:** SQLite, FastAPI integration.
 
 **Plans:**
-- [ ] Plan 1.1: Database Schema & Connection
-- [ ] Plan 1.2: Register & Login Logic (Parameterized)
+- [x] Plan 1.1: Database Schema & Connection
+- [x] Plan 1.2: Register & Login Logic (Parameterized)
 
 ---
 

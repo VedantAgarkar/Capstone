@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+from backend.database import init_db
 
 # Lazy load routes to avoid loading incompatible models at startup
 # from backend.routes import heart 
@@ -36,7 +37,13 @@ app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 # Store process handles for cleanup
 _streamlit_processes = []
 
+
 @app.on_event("startup")
+def startup_event():
+    """Initialize database and start Streamlit apps."""
+    init_db()
+    launch_streamlit_apps()
+
 def launch_streamlit_apps():
     """Start multiple Streamlit apps at different ports with error handling."""
     apps_to_launch = [

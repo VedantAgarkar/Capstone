@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - HealthPredictor</title>
+    <title>Sign Up - HealthPredict</title>
+    <meta name="description" content="Create a HealthPredict account to start your personalised health journey.">
+    <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/login.css">
 </head>
+
 <body>
     <div class="background">
         <div class="shape shape1"></div>
@@ -24,13 +28,7 @@
             <form class="login-form" id="signupForm">
                 <div class="form-group">
                     <div class="input-wrapper">
-                        <input 
-                            type="text" 
-                            id="fullname" 
-                            placeholder="Full Name"
-                            required
-                            class="form-input"
-                        >
+                        <input type="text" id="fullname" placeholder="Full Name" required class="form-input">
                         <span class="input-icon">👤</span>
                         <div class="input-line"></div>
                     </div>
@@ -39,13 +37,7 @@
 
                 <div class="form-group">
                     <div class="input-wrapper">
-                        <input 
-                            type="email" 
-                            id="email" 
-                            placeholder="Email Address"
-                            required
-                            class="form-input"
-                        >
+                        <input type="email" id="email" placeholder="Email Address" required class="form-input">
                         <span class="input-icon">📧</span>
                         <div class="input-line"></div>
                     </div>
@@ -54,14 +46,10 @@
 
                 <div class="form-group">
                     <div class="input-wrapper">
-                        <input 
-                            type="password" 
-                            id="password" 
-                            placeholder="Password"
-                            required
-                            class="form-input"
-                        >
-                        <img class="input-icon toggle-password" onclick="togglePassword()" src="https://img.icons8.com/?size=100&id=0ciqibcg6iLl&format=png&color=000000" alt="Show/Hide Password" style="cursor: pointer; width: 20px; height: 20px;">
+                        <input type="password" id="password" placeholder="Password" required class="form-input">
+                        <img class="input-icon toggle-password" onclick="togglePassword()"
+                            src="https://img.icons8.com/?size=100&id=0ciqibcg6iLl&format=png&color=000000"
+                            alt="Show/Hide Password" style="cursor: pointer; width: 20px; height: 20px;">
                         <div class="input-line"></div>
                     </div>
                     <span class="error-message" id="passwordError"></span>
@@ -69,14 +57,11 @@
 
                 <div class="form-group">
                     <div class="input-wrapper">
-                        <input 
-                            type="password" 
-                            id="confirmPassword" 
-                            placeholder="Confirm Password"
-                            required
-                            class="form-input"
-                        >
-                        <img class="input-icon toggle-confirm-password" onclick="toggleConfirmPassword()" src="https://img.icons8.com/?size=100&id=0ciqibcg6iLl&format=png&color=000000" alt="Show/Hide Password" style="cursor: pointer; width: 20px; height: 20px;">
+                        <input type="password" id="confirmPassword" placeholder="Confirm Password" required
+                            class="form-input">
+                        <img class="input-icon toggle-confirm-password" onclick="toggleConfirmPassword()"
+                            src="https://img.icons8.com/?size=100&id=0ciqibcg6iLl&format=png&color=000000"
+                            alt="Show/Hide Password" style="cursor: pointer; width: 20px; height: 20px;">
                         <div class="input-line"></div>
                     </div>
                     <span class="error-message" id="confirmPasswordError"></span>
@@ -85,7 +70,8 @@
                 <div class="terms-check">
                     <label class="remember-me">
                         <input type="checkbox" class="checkbox" id="termsCheckbox" required>
-                        <span>I agree to the <a href="#" style="color: rgba(255,255,255,0.8); text-decoration: underline;">Terms & Conditions</a></span>
+                        <span>I agree to the <a href="#" style="color: #B79347; font-weight:600;">Terms &amp;
+                                Conditions</a></span>
                     </label>
                     <span class="error-message" id="termsError"></span>
                 </div>
@@ -130,6 +116,8 @@
         </div>
     </div>
 
+    <script src="js/global.js"></script>
     <script src="js/signup.js"></script>
 </body>
+
 </html>

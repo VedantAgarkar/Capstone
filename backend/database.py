@@ -64,10 +64,15 @@ def log_prediction(email, prediction_type, inputs, outcome):
     try:
         user_id = None
         if email:
-            cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
+            email = email.strip().lower()
+            cursor.execute("SELECT id FROM users WHERE LOWER(email) = ?", (email,))
             row = cursor.fetchone()
             if row:
                 user_id = row['id']
+            else:
+                print(f"DEBUG: No user found for normalized email: {email}") # Visible in server console
+        else:
+            print("DEBUG: No email provided to log_prediction")
         
         # Ensure inputs is a string
         if not isinstance(inputs, str):

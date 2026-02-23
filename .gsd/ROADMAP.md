@@ -115,3 +115,4 @@ updated: 2026-02-22
 - [x] Plan 7.1: Data Logging Infrastructure
 - [x] Plan 7.2: Implement Logging in Health Routes
 - [x] Plan 7.3: Dashboard Refresh & Final Polish
+- [x] Plan 7.4: Robust Identity Tracking & Bot Logging

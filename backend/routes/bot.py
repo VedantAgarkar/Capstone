@@ -99,6 +99,18 @@ Otherwise, answer in clear, plain English. IMPORTANT: Always remind the user tha
                 error_msg = "❌ Failed to generate response. Please try again."
                 message_placeholder.error(error_msg)
                 full_response = error_msg
+        
+        # LOG INTERACTION TO DATABASE
+        try:
+            from database import log_prediction
+            from utils import get_email
+            
+            email = get_email()
+            # For the bot, we log the user's question as inputs
+            log_prediction(email, "Medical Bot", user_input, "Responded")
+        except Exception as log_err:
+            # Silent failure for logging in the bot
+            pass
 
     st.session_state.messages.append({"role": "assistant", "content": full_response})
 

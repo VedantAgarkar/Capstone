@@ -137,7 +137,9 @@ def get_email():
     """
     try:
         # Streamlit 1.30+
-        return st.query_params.get("email", None)
+        if "email" in st.query_params:
+            return st.query_params["email"]
+        return None
     except:
         return None
 

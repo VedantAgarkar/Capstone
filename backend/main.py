@@ -49,10 +49,12 @@ async def register(user: UserRegister):
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        # Parameterized query to prevent SQL injection
+        # Normalize email to lowercase
+        email_normalized = user.email.strip().lower()
+        
         cursor.execute(
             "INSERT INTO users (email, password, fullname) VALUES (?, ?, ?)",
-            (user.email, user.password, user.fullname)
+            (email_normalized, user.password, user.fullname)
         )
         conn.commit()
         return {"message": "User registered successfully"}
@@ -66,9 +68,12 @@ async def login(user: UserLogin):
     conn = get_db_connection()
     cursor = conn.cursor()
     # Parameterized query to prevent SQL injection
+    # Normalize email
+    email_normalized = user.email.strip().lower()
+    
     cursor.execute(
-        "SELECT * FROM users WHERE email = ? AND password = ?",
-        (user.email, user.password)
+        "SELECT * FROM users WHERE LOWER(email) = ? AND password = ?",
+        (email_normalized, user.password)
     )
     db_user = cursor.fetchone()
     conn.close()

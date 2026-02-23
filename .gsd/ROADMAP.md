@@ -104,3 +104,14 @@ updated: 2026-02-22
 - [x] Plan 6.1: Theme Dashboard UI
 - [x] Plan 6.2: Theme Login & Signup Pages
 
+---
+
+### Phase 7: Dashboard Data Fix & Refresh Feature
+**Status:** 🔄 Planning
+**Objective:** Fix the missing prediction logging in Streamlit apps to populate the admin dashboard and add a refresh button to the UI.
+**Requirements:** Bridge Streamlit apps with the SQLite database, pass user context (email) via query params, and enhance the Dashboard UI.
+
+**Plans:**
+- [ ] Plan 7.1: Data Logging Infrastructure
+- [ ] Plan 7.2: Implement Logging in Health Routes
+- [ ] Plan 7.3: Dashboard Refresh & Final Polish

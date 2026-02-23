@@ -1,8 +1,14 @@
 import streamlit as st
+import pandas as pd
 import numpy as np
 import os
 import sys
+import warnings
 from dotenv import load_dotenv
+
+# Suppress versioning and feature name warnings from scikit-learn
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", message=".*unpickle estimator.*")
 
 # Add parent directory to path for importing utils
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -198,9 +204,10 @@ st.divider()
 submit_text = get_text("submit", LANG)
 if st.button(submit_text, type="primary", use_container_width=True):
     # Dataset features: Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age
-    # Create feature array matching the dataset order
-    features = np.array([[pregnancies, glucose, blood_pressure, skin_thickness, 
-                         insulin, bmi, diabetes_pedigree, age]])
+    # Create feature DataFrame matching the dataset order
+    feature_names = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age']
+    features = pd.DataFrame([[pregnancies, glucose, blood_pressure, skin_thickness, 
+                          insulin, bmi, diabetes_pedigree, age]], columns=feature_names)
     
     # Apply scaling if scaler is available
     if diabetes_scaler is not None:

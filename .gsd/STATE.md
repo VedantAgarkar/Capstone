@@ -2,11 +2,11 @@
 
 ## Current Position
 - **Phase**: 7 (completed)
-- **Task**: Marathi PDF fix complete
+- **Task**: Model warnings fix complete
 - **Status**: Verified ✅
 
 ## Last Session Summary
-Phase 7 — Fixed the Marathi PDF report issue where text wrapped too early. Switched to `multi_cell` for robust paragraph layout and added a search for multiple Devanagari fonts (Mangal, Nirmala). Also normalized vertical spacing to prevent bloated page counts.
+Phase 7 — Fixed the model-related warnings in the Streamlit apps. Replaced raw numpy arrays with Pandas DataFrames to provide explicit feature names to the scalers/models. Added warning suppression filters to hide version mismatch noise from scikit-learn.
 
 ## Next Steps
-All requested Phase 7 items (Identity Tracking, Dashboard Refresh, Marathi PDF fixes) are complete.
+1. All requested fixes for Phase 7 are complete.

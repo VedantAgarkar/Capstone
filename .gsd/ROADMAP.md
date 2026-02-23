@@ -117,3 +117,4 @@ updated: 2026-02-22
 - [x] Plan 7.3: Dashboard Refresh & Final Polish
 - [x] Plan 7.4: Robust Identity Tracking & Bot Logging
 - [x] Plan 7.5: Fix Marathi PDF Rendering (Wrapping Issue)
+- [x] Plan 7.6: Fix Model Warnings & Feature Mismatches (Cleanup)

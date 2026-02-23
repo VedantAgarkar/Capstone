@@ -3,7 +3,12 @@ import pandas as pd
 import numpy as np
 import os
 import sys
+import warnings
 from dotenv import load_dotenv
+
+# Suppress versioning and feature name warnings from scikit-learn
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", message=".*unpickle estimator.*")
 
 # Add parent directory to path for importing utils
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -168,9 +173,10 @@ if st.button("🔍 Assess Heart Disease Risk", type="primary", use_container_wid
     
     # Create feature array for model (order must match training data)
     # Features: age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal
-    features = np.array([[age, sex_encoded, chest_pain_encoded, resting_bp, cholesterol, 
-                         fasting_encoded, rest_ecg_encoded, max_heart_rate, exercise_angina_encoded, 
-                         st_depression, slope_encoded, ca, thal_encoded]])
+    feature_names = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal']
+    features = pd.DataFrame([[age, sex_encoded, chest_pain_encoded, resting_bp, cholesterol, 
+                          fasting_encoded, rest_ecg_encoded, max_heart_rate, exercise_angina_encoded, 
+                          st_depression, slope_encoded, ca, thal_encoded]], columns=feature_names)
     
     # Apply scaling if scaler is available
     if heart_scaler is not None:

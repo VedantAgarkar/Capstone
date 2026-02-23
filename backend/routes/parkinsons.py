@@ -1,8 +1,14 @@
 import streamlit as st
+import pandas as pd
 import numpy as np
 import os
 import sys
+import warnings
 from dotenv import load_dotenv
+
+# Suppress versioning and feature name warnings from scikit-learn
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", message=".*unpickle estimator.*")
 
 # Add parent directory to path for importing utils
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -216,16 +222,20 @@ st.divider()
 
 # Submit button
 if st.button("🔍 Assess Parkinson's Risk", type="primary", use_container_width=True):
-    # Dataset features (22 voice measurements):
     # MDVP:Fo(Hz), MDVP:Fhi(Hz), MDVP:Flo(Hz), MDVP:Jitter(%), MDVP:Jitter(Abs), 
     # MDVP:RAP, MDVP:PPQ, Jitter:DDP, MDVP:Shimmer, MDVP:Shimmer(dB), 
     # Shimmer:APQ3, Shimmer:APQ5, MDVP:APQ, Shimmer:DDA, NHR, HNR, 
     # RPDE, DFA, spread1, spread2, D2, PPE
     
-    features = np.array([[mdvp_fo, mdvp_fhi, mdvp_flo, mdvp_jitter_percent, mdvp_jitter_abs,
-                         mdvp_rap, mdvp_ppq, jitter_ddp, mdvp_shimmer, mdvp_shimmer_db,
-                         shimmer_apq3, shimmer_apq5, mdvp_apq, shimmer_dda, nhr, hnr,
-                         rpde, dfa, spread1, spread2, d2, ppe]])
+    feature_names = ['MDVP:Fo(Hz)', 'MDVP:Fhi(Hz)', 'MDVP:Flo(Hz)', 'MDVP:Jitter(%)', 'MDVP:Jitter(Abs)', 
+                     'MDVP:RAP', 'MDVP:PPQ', 'Jitter:DDP', 'MDVP:Shimmer', 'MDVP:Shimmer(dB)', 
+                     'Shimmer:APQ3', 'Shimmer:APQ5', 'MDVP:APQ', 'Shimmer:DDA', 'NHR', 'HNR', 
+                     'RPDE', 'DFA', 'spread1', 'spread2', 'D2', 'PPE']
+    
+    features = pd.DataFrame([[mdvp_fo, mdvp_fhi, mdvp_flo, mdvp_jitter_percent, mdvp_jitter_abs,
+                          mdvp_rap, mdvp_ppq, jitter_ddp, mdvp_shimmer, mdvp_shimmer_db,
+                          shimmer_apq3, shimmer_apq5, mdvp_apq, shimmer_dda, nhr, hnr,
+                          rpde, dfa, spread1, spread2, d2, ppe]], columns=feature_names)
     
     # Apply scaling if scaler is available
     if parkinsons_scaler is not None:

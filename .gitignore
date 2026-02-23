@@ -6,6 +6,7 @@ __pycache__/
 .Python
 env/
 venv/
+.venv/
 ENV/
 build/
 develop-eggs/
@@ -40,28 +41,26 @@ wheels/
 *.log
 logs/
 
-# Models (optional - add if too large)
-# *.sav
-# *.pkl
-# *.joblib
-
-# Cache
+# Agent & Cache
+.agent/
+.gemini/
 .cache/
 .pytest_cache/
+
+# Project Specific Artifacts & Backups
+backups/
+reseduial/
+gsd-template/
+*.mp4
+*.bak
+*.zip
+*.7z
+*.rar
+*.iso
 
 # Streamlit
 .streamlit/
 
-# OS
+# OS specific
 Thumbs.db
 .DS_Store
-chatbot.mp4
-diabetes.mp4
-heart.mp4
-Overview.mp4
-parkinsons.mp4
-reseduial/updated.7z
-.gitignore
-reseduial/updated_v2.zip
-reseduial/zip/diabetes.csv
-.gitignore

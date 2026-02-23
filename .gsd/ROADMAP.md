@@ -118,3 +118,17 @@ updated: 2026-02-22
 - [x] Plan 7.4: Robust Identity Tracking & Bot Logging
 - [x] Plan 7.5: Fix Marathi PDF Rendering (Wrapping Issue)
 - [x] Plan 7.6: Fix Model Warnings & Feature Mismatches (Cleanup)
+
+---
+
+### Phase 8: Multi-Language Support for Streamlit Apps
+**Status:** ✅ Complete
+**Objective:** Ensure the language selection from the homepage (English/Marathi) persists in the Streamlit assessment apps and chatbot.
+**Requirements:** Implementation of translation dictionaries in all Streamlit routes and UI updates based on the 'lang' query parameter.
+
+**Plans:**
+- [x] Plan 8.1: Localize Heart Disease Assessment
+- [x] Plan 8.2: Localize Parkinson's Disease Assessment
+- [x] Plan 8.3: Localize Medical AI Bot & Final Polish
+
+---

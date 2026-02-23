@@ -44,9 +44,13 @@ LABELS = {
         "hypertension": "Hypertension", "hyper_help": "Do you have high blood pressure?",
         "sleep": "Average Sleep Hours", "sleep_help": "Average hours of sleep per night",
         "analyzing": "🔄 Analyzing your diabetes risk data...",
+        "completing": "✅ Assessment Complete!",
         "prompt_intro": "You are a medical AI assistant. Based on the following health metrics and AI model prediction, provide a comprehensive diabetes risk assessment:",
-        "download": "📥 Download Assessment",
-        "summary_header": "### 📋 Your Diabetes Risk Assessment:"
+        "download": "📥 Download Assessment (PDF)",
+        "summary_header": "### 📋 Your Diabetes Risk Assessment:",
+        "high_risk": "HIGH RISK", "mod_risk": "MODERATE RISK", "low_risk": "LOW RISK",
+        "prob_text": "probability of diabetes",
+        "footer_text": "HealthPredict | Medical Risk Assessment AI - Not a substitute for professional medical advice"
     },
     "mr": {
         "title": "🩺 मधुमेह जोखीम मूल्यांकन",
@@ -70,9 +74,13 @@ LABELS = {
         "hypertension": "उच्च रक्तदाब (Hypertension)", "hyper_help": "तुम्हाला उच्च रक्तदाब आहे का?",
         "sleep": "सरासरी झोपेचे तास", "sleep_help": "दररोज रात्री झोपेचे सरासरी तास",
         "analyzing": "🔄 तुमच्या डेटाचे विश्लेषण करत आहे...",
+        "completing": "✅ मूल्यांकन पूर्ण झाले!",
         "prompt_intro": "तुम्ही वैद्यकीय एआय सहाय्यक आहात. खालील आरोग्य मेट्रिक्स आणि एआय मॉडेलच्या अंदाजावर आधारित, कृपया मराठी भाषेत सर्वसमावेशक मधुमेह जोखीम मूल्यांकन द्या:",
-        "download": "📥 अहवाल डाउनलोड करा",
-        "summary_header": "### 📋 तुमचे मधुमेह जोखीम मूल्यांकन:"
+        "download": "📥 मूल्यांकन डाउनलोड करा (PDF)",
+        "summary_header": "### 📋 तुमचे मधुमेह जोखीम मूल्यांकन:",
+        "high_risk": "उच्च धोका", "mod_risk": "मध्यम धोका", "low_risk": "कमी धोका",
+        "prob_text": "मधुमेहाची शक्यता",
+        "footer_text": "HealthPredict | वैद्यकीय जोखीम मूल्यांकन AI - व्यावसायिक वैद्यकीय सल्ल्याचा पर्याय नाही"
     }
 }
 
@@ -201,8 +209,7 @@ with col8:
 st.divider()
 
 # Submit button
-submit_text = get_text("submit", LANG)
-if st.button(submit_text, type="primary", use_container_width=True):
+if st.button(L('submit_btn'), type="primary", use_container_width=True):
     # Dataset features: Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age
     # Create feature DataFrame matching the dataset order
     feature_names = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age']
@@ -232,7 +239,7 @@ if st.button(submit_text, type="primary", use_container_width=True):
 
 MODEL PREDICTION RESULT:
 - Risk Percentage: {risk_percentage:.1f}%
-- Risk Classification: {'HIGH RISK' if risk_percentage > 70 else 'MODERATE RISK' if risk_percentage > 40 else 'LOW RISK'}
+- Risk Classification: {L('high_risk') if risk_percentage > 70 else L('mod_risk') if risk_percentage > 40 else L('low_risk')}
 
 Patient Profile:
 Clinical Measurements:
@@ -284,10 +291,9 @@ Please provide:
             except Exception as log_err:
                 st.error(f"Note: Could not log prediction result: {log_err}")
                 
-            success_msg = get_text("success", LANG)
-            st.success(f"✅ {success_msg}")
+            st.success(L('completing'))
         else:
-            st.error("❌ Failed to generate assessment. Please try again.")
+            st.error("❌ Failed to generate assessment.")
 
 # Display assessment results
 if st.session_state.get("assessment"):
@@ -301,11 +307,11 @@ if st.session_state.get("assessment"):
     }
 
     if risk_pct > 70:
-        st.error(f"⚠️ **{risk_labels['high']}**: {risk_pct:.1f}% probability")
+        st.error(f"⚠️ **{L('high_risk')}**: {risk_pct:.1f}% {L('prob_text')}")
     elif risk_pct > 40:
-        st.warning(f"⚠️ **{risk_labels['mod']}**: {risk_pct:.1f}% probability")
+        st.warning(f"⚠️ **{L('mod_risk')}**: {risk_pct:.1f}% {L('prob_text')}")
     else:
-        st.success(f"✅ **{risk_labels['low']}**: {risk_pct:.1f}% probability")
+        st.success(f"✅ **{L('low_risk')}**: {risk_pct:.1f}% {L('prob_text')}")
     
     # Render visual risk meter
     render_risk_meter(risk_pct)
@@ -317,7 +323,7 @@ if st.session_state.get("assessment"):
     pdf_bytes = generate_pdf_report(
         content=st.session_state.assessment,
         risk_pct=risk_pct,
-        title="Diabetes Risk Assessment",
+        title=L('title'),
         patient_info=f"Age: {age}, Sex: {sex}, Glucose: {glucose}"
     )
 
@@ -330,9 +336,9 @@ if st.session_state.get("assessment"):
     )
 
 # ───────────── Sticky Footer ───────────── #
-st.markdown("""
+st.markdown(f"""
     <style>
-    .footer {
+    .footer {{
         position: fixed;
         left: 0;
         bottom: 0;
@@ -341,12 +347,11 @@ st.markdown("""
         color: gold;
         text-align: center;
         padding: 15px 0;
-        font-size: 16px;
+        font-size: 14px;
         z-index: 9999;
-    }
+    }}
     </style>
-
     <div class="footer">
-        &copy; 2026 HealthPredict | Medical Risk Assessment AI
+        &copy; 2026 {L('footer_text')}
     </div>
 """, unsafe_allow_html=True)

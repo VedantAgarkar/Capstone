@@ -39,7 +39,8 @@ LABELS = {
         "sleep": "Average Sleep Hours", "sleep_help": "Average hours of sleep per night",
         "analyzing": "🔄 Analyzing your diabetes risk data...",
         "prompt_intro": "You are a medical AI assistant. Based on the following health metrics and AI model prediction, provide a comprehensive diabetes risk assessment:",
-        "download": "📥 Download Assessment"
+        "download": "📥 Download Assessment",
+        "summary_header": "### 📋 Your Diabetes Risk Assessment:"
     },
     "mr": {
         "title": "🩺 मधुमेह जोखीम मूल्यांकन",
@@ -64,7 +65,8 @@ LABELS = {
         "sleep": "सरासरी झोपेचे तास", "sleep_help": "दररोज रात्री झोपेचे सरासरी तास",
         "analyzing": "🔄 तुमच्या डेटाचे विश्लेषण करत आहे...",
         "prompt_intro": "तुम्ही वैद्यकीय एआय सहाय्यक आहात. खालील आरोग्य मेट्रिक्स आणि एआय मॉडेलच्या अंदाजावर आधारित, कृपया मराठी भाषेत सर्वसमावेशक मधुमेह जोखीम मूल्यांकन द्या:",
-        "download": "📥 अहवाल डाउनलोड करा"
+        "download": "📥 अहवाल डाउनलोड करा",
+        "summary_header": "### 📋 तुमचे मधुमेह जोखीम मूल्यांकन:"
     }
 }
 
@@ -300,6 +302,9 @@ if st.session_state.get("assessment"):
     
     # Render visual risk meter
     render_risk_meter(risk_pct)
+    
+    st.markdown(L('summary_header'))
+    st.write(st.session_state.assessment)
     
     # Generate PDF Report
     pdf_bytes = generate_pdf_report(

@@ -258,19 +258,11 @@ def render_risk_meter(risk_percentage):
 def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Provided"):
     """
     Generate a formatted PDF report with risk meter visualization.
-    
-    Args:
-        content (str): Markdown formatted text content
-        risk_pct (float): Risk percentage (0-100)
-        title (str): Report title
-        patient_info (str or dict): Patient details
-        
-    Returns:
-        bytearray: PDF content in bytes
     """
     from fpdf import FPDF
     import io
     import re
+    import os
     
     class PDF(FPDF):
         def header(self):
@@ -316,52 +308,41 @@ def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Prov
     bar_w = 190
     bar_h = 10
     
-    # Gradient-like effect using rectangles
-    # Green (Low)
     pdf.set_fill_color(40, 167, 69)
     pdf.rect(bar_x, bar_y, bar_w * 0.4, bar_h, 'F')
-    # Orange (Moderate)
     pdf.set_fill_color(253, 126, 20)
     pdf.rect(bar_x + bar_w * 0.4, bar_y, bar_w * 0.3, bar_h, 'F')
-    # Red (High)
     pdf.set_fill_color(220, 53, 69)
     pdf.rect(bar_x + bar_w * 0.7, bar_y, bar_w * 0.3, bar_h, 'F')
     
-    # Draw Arrow Indicator
     clean_pct = max(0, min(100, risk_pct))
     arrow_x = bar_x + (bar_w * (clean_pct / 100))
-    
     pdf.set_fill_color(0, 0, 0)
-    # Triangle Polygon
-    # (x1,y1), (x2,y2), (x3,y3)
-    # Pointing down to the bar
-    # Triangle Polygon (manual lines since polygon might not exist in old fpdf)
-    # (x1,y1) -> (x2,y2) -> (x3,y3) -> close
-    # Pointing down to the bar at (arrow_x, bar_y - 2)
-    # Top Left: (arrow_x - 3, bar_y - 8)
-    # Top Right: (arrow_x + 3, bar_y - 8)
-    
-    # We can use a small filled rect as a marker if polygon fails, or draw lines.
-    # To be safe and simple: Draw a small black rectangle as the marker
     pdf.rect(arrow_x - 1.5, bar_y - 8, 3, 6, 'F')
     
     pdf.ln(20)
     
+    # PRE-PROCESS CONTENT: Fix spacing to prevent 34-page bloat
+    content = re.sub(r'\n{2,}', '\n', content)
     lines = content.split('\n')
     
-    # Try to add a Unicode font (e.g., Arial Unicode or similar if available)
-    font_path = "C:\\Windows\\Fonts\\mangal.ttf" # Mangal is common for Devanagari
-    has_unicode_font = False
+    # Try multiple Unicode fonts
+    font_candidates = [
+        "C:\\Windows\\Fonts\\mangal.ttf",
+        "C:\\Windows\\Fonts\\nirmala.ttf",
+        "C:\\Windows\\Fonts\\kokila.ttf"
+    ]
     
-    if os.path.exists(font_path):
-        try:
-            # FPDF2 syntax: fname=font_path
-            pdf.add_font("MarathiFont", style="", fname=font_path)
-            has_unicode_font = True
-        except:
-            has_unicode_font = False
+    has_unicode_font = False
+    for fp in font_candidates:
+        if os.path.exists(fp):
+            try:
+                pdf.add_font("MarathiFont", style="", fname=fp)
+                has_unicode_font = True
+                break
+            except:
+                continue
 
-    # Pre-process content if NO unicode font is available
     if not has_unicode_font:
         content = content.replace(u'\xa0', u' ')
         try:
@@ -373,11 +354,10 @@ def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Prov
     for line in lines:
         line = line.strip()
         if not line:
-            pdf.ln(5)
+            pdf.ln(3)
             continue
             
         if has_unicode_font:
-             # Use the unicode font logic
              if line.startswith('###'):
                  pdf.set_font("MarathiFont", "", 14)
                  pdf.set_text_color(6, 6, 28)
@@ -387,66 +367,29 @@ def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Prov
              else:
                  pdf.set_font("MarathiFont", "", 11)
                  pdf.set_text_color(0, 0, 0)
-
+ 
              clean_line = line.replace('#', '').replace('**', '').strip()
-             pdf.write(6, clean_line)
-             pdf.ln(6)
+             # Use multi_cell for reliable paragraph wrapping
+             pdf.multi_cell(0, 8, clean_line)
+             pdf.ln(1)
              continue
             
-        # Fallback Logic (Standard Fonts)
-        # Headers (###)
+        # Fallback path
         if line.startswith('###'):
             pdf.set_font("Arial", "B", 14)
-            pdf.set_text_color(6, 6, 28) # Dark Blue
+            pdf.set_text_color(6, 6, 28)
             clean_line = line.replace('#', '').strip()
-            pdf.cell(0, 10, clean_line, 0, 1, 'L')
-            pdf.set_text_color(0, 0, 0)
-            
-        # Headers (##)
+            pdf.multi_cell(0, 10, clean_line)
         elif line.startswith('##'):
             pdf.set_font("Arial", "B", 13)
-            # Remove symbols
             clean_line = line.replace('#', '').strip()
-            pdf.cell(0, 10, clean_line, 0, 1, 'L')
-            
-        # Bold points (- **Something**: text)
-        elif line.startswith('-'):
-            pdf.set_font("Arial", "", 11)
-            parts = re.split(r'(\*\*.*?\*\*)', line)
-            pdf.set_x(15) 
-            for part in parts:
-                if part.startswith('**') and part.endswith('**'):
-                    pdf.set_font("Arial", "B", 11)
-                    clean_part = part.replace('**', '')
-                    pdf.write(5, clean_part)
-                else:
-                    pdf.set_font("Arial", "", 11)
-                    pdf.write(5, part)
-            pdf.ln(6)
-            
-        # Numbered lists (1. Something)
-        elif re.match(r'^\d+\.', line):
-            pdf.set_font("Arial", "B", 11)
-            pdf.write(6, line)
-            pdf.ln(6)
-            
-        # Standard Text
+            pdf.multi_cell(0, 10, clean_line)
         else:
             pdf.set_font("Arial", "", 11)
-            parts = re.split(r'(\*\*.*?\*\*)', line)
-            for part in parts:
-                if part.startswith('**') and part.endswith('**'):
-                    pdf.set_font("Arial", "B", 11)
-                    clean_part = part.replace('**', '')
-                    pdf.write(5, clean_part)
-                else:
-                    pdf.set_font("Arial", "", 11)
-                    pdf.write(5, part)
-            pdf.ln(6)
+            clean_line = line.replace('**', '').strip()
+            pdf.multi_cell(0, 8, clean_line)
+        pdf.ln(1)
             
-    # Return PDF bytes
-    # FPDF2 output() returns bytes or bytearray depending on version
-    # Streamlit requires bytes, str, or io.BytesIO
     try:
         pdf_data = pdf.output()
         if isinstance(pdf_data, bytearray):

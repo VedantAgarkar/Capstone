@@ -13,9 +13,29 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Fetch and populate stats
+    // Initial fetch
     fetchStats(user.email);
+
+    // Refresh button event listener
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+            refreshDashboard(user.email);
+        });
+    }
 });
+
+async function refreshDashboard(email) {
+    const btn = document.getElementById('refreshBtn');
+    if (btn) btn.classList.add('loading');
+
+    await fetchStats(email);
+
+    // Minor delay for visual feedback of the spin
+    setTimeout(() => {
+        if (btn) btn.classList.remove('loading');
+    }, 600);
+}
 
 async function fetchStats(email) {
     try {

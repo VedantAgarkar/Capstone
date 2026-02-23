@@ -3,17 +3,17 @@
 /* ═══════════════════════════════════════════════════ */
 
 :root {
-    --dash-bg-deep:   #11142b;
-    --dash-bg:        #1a1f3a;
-    --dash-card:      rgba(26, 31, 58, 0.85);
-    --dash-border:    rgba(183, 147, 71, 0.25);
+    --dash-bg-deep: #11142b;
+    --dash-bg: #1a1f3a;
+    --dash-card: rgba(26, 31, 58, 0.85);
+    --dash-border: rgba(183, 147, 71, 0.25);
     --dash-border-hover: rgba(183, 147, 71, 0.6);
-    --dash-gold:      #B79347;
-    --dash-gold-dim:  rgba(183, 147, 71, 0.15);
+    --dash-gold: #B79347;
+    --dash-gold-dim: rgba(183, 147, 71, 0.15);
     --dash-gold-glow: rgba(183, 147, 71, 0.35);
-    --dash-white:     #ffffff;
-    --dash-muted:     rgba(255, 255, 255, 0.55);
-    --dash-success:   #4ade80;
+    --dash-white: #ffffff;
+    --dash-muted: rgba(255, 255, 255, 0.55);
+    --dash-success: #4ade80;
 }
 
 body {
@@ -33,7 +33,65 @@ body {
 
 /* ── Header ───────────────────────────────────────── */
 .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
     margin-bottom: 40px;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.refresh-btn {
+    background: var(--dash-gold-dim);
+    border: 1px solid var(--dash-gold);
+    color: var(--dash-gold);
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: fit-content;
+}
+
+.refresh-btn:hover {
+    background: var(--dash-gold);
+    color: var(--dash-bg-deep);
+    box-shadow: 0 4px 15px var(--dash-gold-glow);
+    transform: translateY(-2px);
+}
+
+.refresh-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.refresh-icon {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.refresh-btn.loading .refresh-icon {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .dashboard-header h1 {
@@ -201,8 +259,15 @@ body {
 }
 
 @keyframes pulse-dot {
-    0%, 100% { box-shadow: 0 0 6px var(--dash-success); }
-    50%       { box-shadow: 0 0 14px var(--dash-success), 0 0 20px rgba(74, 222, 128, 0.3); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 6px var(--dash-success);
+    }
+
+    50% {
+        box-shadow: 0 0 14px var(--dash-success), 0 0 20px rgba(74, 222, 128, 0.3);
+    }
 }
 
 .status-text {

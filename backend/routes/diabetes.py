@@ -260,6 +260,21 @@ Please provide:
         if assessment:
             st.session_state.assessment = assessment
             st.session_state.risk_percentage = risk_percentage
+            
+            # LOG PREDICTION TO DATABASE
+            try:
+                from database import log_prediction
+                from utils import get_email
+                
+                email = get_email()
+                # Format inputs for easy reading in admin panel
+                input_summary = f"Age: {age}, Glucose: {glucose}, BMI: {bmi}, Insulin: {insulin}"
+                outcome = f"{risk_percentage:.1f}% Risk"
+                
+                log_prediction(email, "Diabetes", input_summary, outcome)
+            except Exception as log_err:
+                st.error(f"Note: Could not log prediction result: {log_err}")
+                
             success_msg = get_text("success", LANG)
             st.success(f"✅ {success_msg}")
         else:

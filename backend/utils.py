@@ -130,6 +130,17 @@ def get_language():
     except:
         return "en"
 
+def get_email():
+    """
+    Get user email from query parameters for logging.
+    Returns None if not provided.
+    """
+    try:
+        # Streamlit 1.30+
+        return st.query_params.get("email", None)
+    except:
+        return None
+
 def get_text(key, lang=None):
     """Get translated text for a key."""
     if lang is None:

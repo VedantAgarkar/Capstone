@@ -111,6 +111,20 @@ function updateLanguage(lang) {
     document.querySelectorAll('a[href^="http://localhost"]').forEach(link => {
         const url = new URL(link.href);
         url.searchParams.set('lang', lang);
+        
+        // Add email if user is logged in for prediction tracking
+        const userJson = localStorage.getItem('user');
+        if (userJson) {
+            try {
+                const user = JSON.parse(userJson);
+                if (user.email) {
+                    url.searchParams.set('email', user.email);
+                }
+            } catch (e) {
+                console.error("Error parsing user context for URL propagation:", e);
+            }
+        }
+        
         link.href = url.toString();
     });
 }

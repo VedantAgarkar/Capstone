@@ -104,9 +104,9 @@ async def get_admin_stats(email: str):
     
     # Get recent predictions
     cursor.execute("""
-        SELECT p.*, u.fullname 
+        SELECT p.*, IFNULL(u.fullname, 'Guest User') as fullname 
         FROM predictions p 
-        JOIN users u ON p.user_id = u.id 
+        LEFT JOIN users u ON p.user_id = u.id 
         ORDER BY timestamp DESC LIMIT 10
     """)
     recent_predictions = [dict(row) for row in cursor.fetchall()]

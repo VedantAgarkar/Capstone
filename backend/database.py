@@ -1,5 +1,6 @@
 import sqlite3
 import os
+import json
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "data", "users.db")
 
@@ -51,6 +52,36 @@ def init_db():
     conn.commit()
     conn.close()
     print(f"Database initialized at {DB_PATH}")
+
+def log_prediction(email, prediction_type, inputs, outcome):
+    """
+    Logs a prediction result to the database.
+    Inputs is expected to be a JSON-serializable dict or list, or a string.
+    """
+    conn = get_db_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    try:
+        user_id = None
+        if email:
+            cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
+            row = cursor.fetchone()
+            if row:
+                user_id = row['id']
+        
+        # Ensure inputs is a string
+        if not isinstance(inputs, str):
+            inputs = json.dumps(inputs)
+            
+        cursor.execute('''
+            INSERT INTO predictions (user_id, type, inputs, outcome)
+            VALUES (?, ?, ?, ?)
+        ''', (user_id, prediction_type, inputs, outcome))
+        conn.commit()
+    except Exception as e:
+        print(f"Database Error in log_prediction: {e}")
+    finally:
+        conn.close()
 
 if __name__ == "__main__":
     init_db()

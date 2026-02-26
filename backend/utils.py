@@ -264,6 +264,42 @@ def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Prov
     import re
     import os
     
+    lang = get_language()
+    pdf_labels = {
+        "en": {
+            "subtitle": "Medical Risk Assessment AI",
+            "footer": "HealthPredict AI - Not a substitute for professional medical advice | Page ",
+            "risk_prob": "Risk Probability: "
+        },
+        "mr": {
+            "subtitle": "वैद्यकीय जोखीम मूल्यांकन एआय",
+            "footer": "HealthPredict AI - व्यावसायिक वैद्यकीय सल्ल्याचा पर्याय नाही | पृष्ठ ",
+            "risk_prob": "जोखीम शक्यता: "
+        }
+    }
+    L_PDF = pdf_labels.get(lang, pdf_labels["en"])
+
+    # 1. First, check and add Unicode font if needed
+    font_candidates = [
+        "C:\\Windows\\Fonts\\mangal.ttf",
+        "C:\\Windows\\Fonts\\kokila.ttf",
+        "C:\\Windows\\Fonts\\nirmala.ttf"
+    ]
+    
+    # Create a temporary PDF to check font loading
+    temp_pdf = FPDF()
+    has_unicode_font = False
+    active_font_path = None
+    for fp in font_candidates:
+        if os.path.exists(fp):
+            try:
+                temp_pdf.add_font("MarathiFont", style="", fname=fp)
+                has_unicode_font = True
+                active_font_path = fp
+                break
+            except:
+                continue
+
     class PDF(FPDF):
         def header(self):
             # Banner color
@@ -276,31 +312,51 @@ def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Prov
             self.cell(0, 20, "HealthPredict", 0, 1, 'C', False)
             
             # Subtitle
-            self.set_font('Arial', 'I', 12)
-            self.cell(0, 5, "Medical Risk Assessment AI", 0, 1, 'C', False)
+            if lang == "mr" and has_unicode_font:
+                self.set_font("MarathiFont", "", 12)
+            else:
+                self.set_font('Arial', 'I', 12)
+            self.cell(0, 5, L_PDF["subtitle"], 0, 1, 'C', False)
             self.ln(20)
 
         def footer(self):
             self.set_y(-15)
-            self.set_font('Arial', 'I', 8)
+            if lang == "mr" and has_unicode_font:
+                self.set_font("MarathiFont", "", 8)
+            else:
+                self.set_font('Arial', 'I', 8)
             self.set_text_color(128, 128, 128)
-            self.cell(0, 10, 'HealthPredict AI - Not a substitute for professional medical advice | Page ' + str(self.page_no()), 0, 0, 'C')
+            self.cell(0, 10, L_PDF["footer"] + str(self.page_no()), 0, 0, 'C')
 
     # Create PDF object
     pdf = PDF()
+    if has_unicode_font:
+        pdf.add_font("MarathiFont", style="", fname=active_font_path)
+    
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
+
     
     # ─── REPORT TITLE ───
-    pdf.set_font("Arial", "B", 18)
+    if has_unicode_font:
+        pdf.set_font("MarathiFont", "", 18)
+    else:
+        pdf.set_font("Arial", "B", 18)
+
+        
     pdf.set_text_color(183, 147, 71) # Gold #B79347
     pdf.cell(0, 10, title, 0, 1, 'L')
     pdf.ln(5)
     
     # ─── VISUAL RISK METER ───
-    pdf.set_font("Arial", "B", 12)
+    if lang == "mr" and has_unicode_font:
+        pdf.set_font("MarathiFont", "", 12)
+    else:
+        pdf.set_font("Arial", "B", 12)
+        
     pdf.set_text_color(50, 50, 50)
-    pdf.cell(0, 10, f"Risk Probability: {risk_pct:.1f}%", 0, 1, 'L')
+    pdf.cell(0, 10, f"{L_PDF['risk_prob']}{risk_pct:.1f}%", 0, 1, 'L')
+
     
     # Draw Meter Background
     bar_x = 10
@@ -326,23 +382,6 @@ def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Prov
     content = re.sub(r'\n{2,}', '\n', content)
     lines = content.split('\n')
     
-    # Try multiple Unicode fonts
-    font_candidates = [
-        "C:\\Windows\\Fonts\\mangal.ttf",
-        "C:\\Windows\\Fonts\\nirmala.ttf",
-        "C:\\Windows\\Fonts\\kokila.ttf"
-    ]
-    
-    has_unicode_font = False
-    for fp in font_candidates:
-        if os.path.exists(fp):
-            try:
-                pdf.add_font("MarathiFont", style="", fname=fp)
-                has_unicode_font = True
-                break
-            except:
-                continue
-
     if not has_unicode_font:
         content = content.replace(u'\xa0', u' ')
         try:

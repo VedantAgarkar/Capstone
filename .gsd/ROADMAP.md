@@ -132,3 +132,25 @@ updated: 2026-02-22
 - [x] Plan 8.3: Localize Medical AI Bot & Final Polish
 
 ---
+
+### Phase 9: Unified Health Dashboard (Wellness API)
+**Status:** 🔄 Planning
+**Objective:** Develop the logic and UI for the "Personal Health Report Card" to aggregate user data and calculate wellness scores.
+**Requirements:** New API endpoint for personal stats, wellness score algorithm, and UI updates for the user dashboard.
+
+**Plans:**
+- [ ] Plan 9.1: Personal Stats API & Wellness Logic
+- [ ] Plan 9.2: User Health Report Card UI
+
+---
+
+### Phase 10: AI Symptom Checker (Triage)
+**Status:** 🔄 Planning
+**Objective:** Implement a dedicated chat interface for symptom triage using LLMs.
+**Requirements:** New route for triage bot, mapping logic to health assessments, and frontend integration.
+
+**Plans:**
+- [ ] Plan 10.1: Triage Bot Implementation
+- [ ] Plan 10.2: Symptom Checker UI & Redirection
+
+---

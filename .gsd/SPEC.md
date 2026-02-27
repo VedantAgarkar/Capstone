@@ -14,23 +14,29 @@ Integrate a secure user authentication system for HealthPredict using a SQLite-b
 4. **Frontend Integration** — Update `login.js` and `signup.js` to communicate with the real backend.
 5. **Admin Dashboard** — Create a "Bento Box" style dashboard visible only to admins, displaying all user data and prediction outcomes.
 6. **Data Tracking** — Log all user inputs (readings) and prediction outcomes to the database for administrative review.
+7. **Personal Health Report Card** — Aggregate prediction data from all assessments to calculate a "Wellness Score".
+8. **AI Symptom Checker** — A Chat-based triage system to direct users to the appropriate assessment.
 
 ## Non-Goals (Out of Scope)
 - OAuth (Google/GitHub) integration (Social logins remain placeholders for now).
 - Email verification.
 - Password reset flow (unless explicitly requested later).
+- Integration with external health trackers (Fitbit/Apple Health).
 
 ## Constraints
-- Must use SQLite for simple, "fake server" (local file-based) storage as requested.
-- FastAPI is already in use, so the auth logic should be integrated into `main.py` or separate route files.
+- Must use SQLite for storage.
+- Streamlit apps must communicate with the database via the established logging mechanism.
+- AI features must use the existing OpenRouter API setup.
 
 ## Success Criteria
-- [ ] User can create an account via `/signup.html`.
-- [ ] User can sign in via `/login.html`.
-- [ ] Admin user sees "Dashboard" link in navbar.
-- [ ] Dashboard displays user activity and prediction history in a Bento Box layout.
-- [ ] Backend prevents SQL injection (verified with payload test).
-- [ ] Data persists across server restarts in `users.db`.
+- [x] User can create an account via `/signup.html`.
+- [x] User can sign in via `/login.html`.
+- [x] Admin user sees "Dashboard" link in navbar.
+- [x] Dashboard displays user activity and prediction history in a Bento Box layout.
+- [x] Backend prevents SQL injection (verified with payload test).
+- [x] Data persists across server restarts in `users.db`.
+- [ ] Users can see their "Personal Health Report Card" on their profile/dashboard.
+- [ ] AI Symptom Checker correctly identifies relevant assessment categories based on natural language input.
 
 ## Technical Requirements
 
@@ -43,6 +49,8 @@ Integrate a secure user authentication system for HealthPredict using a SQLite-b
 | Data Logging | Must-have | Record `user_id`, `prediction_type`, `inputs`, and `outcome` |
 | Bento Box UI | Must-have | Modern, responsive grid layout for the dashboard |
 | Password Hashing | Should-have | Using `passlib` or similar for security |
+| Aggregation Logic | Must-have | Backend logic to calculate wellness score from history |
+| Triage Chatbot | Must-have | LLM-based system to map symptoms to Heart/Diabetes/Parkinsons |
 
 ---
 

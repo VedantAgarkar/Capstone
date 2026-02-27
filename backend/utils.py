@@ -278,6 +278,8 @@ def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Prov
         }
     }
     L_PDF = pdf_labels.get(lang, pdf_labels["en"])
+    # Clean L_PDF values
+    L_PDF = {k: "".join(c for c in v if ord(c) < 0x10000) for k, v in L_PDF.items()}
 
     # 1. First, check and add Unicode font if needed
     font_candidates = [
@@ -338,14 +340,28 @@ def generate_pdf_report(content, risk_pct, title="Start", patient_info="Not Prov
 
     
     # ─── REPORT TITLE ───
+    # Helper to strip characters not supported by standard fonts (like emojis)
+    def clean_text_for_pdf(text):
+        if not text: return ""
+        # Remove characters above 0xFFFF (emojis)
+        return "".join(c for c in text if ord(c) < 0x10000)
+
+    title = clean_text_for_pdf(title)
+    content = clean_text_for_pdf(content)
+    patient_info = clean_text_for_pdf(patient_info)
+
     if has_unicode_font:
         pdf.set_font("MarathiFont", "", 18)
     else:
         pdf.set_font("Arial", "B", 18)
-
         
     pdf.set_text_color(183, 147, 71) # Gold #B79347
     pdf.cell(0, 10, title, 0, 1, 'L')
+    
+    # ─── PATIENT INFO ───
+    pdf.set_font("Arial", "I", 10)
+    pdf.set_text_color(100, 100, 100)
+    pdf.cell(0, 10, patient_info, 0, 1, 'L')
     pdf.ln(5)
     
     # ─── VISUAL RISK METER ───

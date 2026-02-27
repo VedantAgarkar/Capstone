@@ -1,21 +1,16 @@
 # STATE.md — Session Memory
 
 ## Current Position
-- **Phase**: 8
-- **Task**: Multi-Language Support for Streamlit Apps
-- **Status**: Completed ✅
+- **Phase**: 9
+- **Task**: Unified Health Dashboard (Planning)
+- **Status**: Ready for execution 🔄
 
 ## Last Session Summary
-Implemented full multi-language support (English and Marathi) across all assessment apps and the medical bot. 
-Key achievements:
-- Localized `heart.py`, `diabetes.py`, `parkinsons.py`, and `bot.py`.
-- Integrated `get_language()` utility to sync language preference from the main website via URL parameters.
-- Built comprehensive `LABELS` dictionaries for each app for English and Marathi translations.
-- Localized all UI elements: headers, input labels, technical terms, button text, and AI assessment prompts.
-- Ensured AI models respond in the user's selected language.
-- Localized PDF report content and footer sections.
-- Verified persistence of language selection across sessions.
+Finalized planning for the next evolution of HealthPredict:
+1.  **Phase 9: Unified Health Dashboard**: Added plans for a "Personal Health Report Card" with wellness score aggregation.
+2.  **Phase 10: AI Symptom Checker**: Added plans for an AI triage system to guide users to appropriate assessments.
+3.  Updated `SPEC.md` and `ROADMAP.md` to reflect these major feature additions.
 
 ## Next Steps
-1. Project is fully localized and ready for final review.
-2. Consider adding more languages if requested in the future.
+1. /execute 9 — Start implementing the Personal Wellness API and User Dashboard.
+2. /execute 10 — Implement the AI Triage Symptom Checker.

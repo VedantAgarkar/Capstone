@@ -145,12 +145,12 @@ updated: 2026-02-22
 ---
 
 ### Phase 10: AI Symptom Checker (Triage)
-**Status:** 🔄 Planning
+**Status:** ✅ Complete
 **Objective:** Implement a dedicated chat interface for symptom triage using LLMs.
 **Requirements:** New route for triage bot, mapping logic to health assessments, and frontend integration.
 
 **Plans:**
-- [ ] Plan 10.1: Triage Bot Implementation
-- [ ] Plan 10.2: Symptom Checker UI & Redirection
+- [x] Plan 10.1: Triage Bot Implementation
+- [x] Plan 10.2: Symptom Checker UI & Redirection
 
 ---

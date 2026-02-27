@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle View based on Role
     if (user.is_admin) {
         document.getElementById('adminView').style.display = 'grid';
-        fetchAdminStats(user.email);
+        fetchAdminStats();
     } else {
         const userView = document.getElementById('userView');
         if (userView) userView.style.display = 'grid';
@@ -22,25 +22,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const subtitle = document.getElementById('headerSubtitle');
         if (subtitle) subtitle.textContent = "Your personal health report card";
         
-        fetchUserStats(user.email);
+        fetchUserStats();
     }
 
     // Refresh button event listener
     const refreshBtn = document.getElementById('refreshBtn');
     if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {
-            if (user.is_admin) refreshDashboard(user.email, true);
-            else refreshDashboard(user.email, false);
+            refreshDashboard(user.is_admin);
         });
     }
 });
 
-async function refreshDashboard(email, isAdmin) {
+async function refreshDashboard(isAdmin) {
     const btn = document.getElementById('refreshBtn');
     if (btn) btn.classList.add('loading');
 
-    if (isAdmin) await fetchAdminStats(email);
-    else await fetchUserStats(email);
+    if (isAdmin) await fetchAdminStats();
+    else await fetchUserStats();
 
     // Minor delay for visual feedback
     setTimeout(() => {
@@ -48,11 +47,21 @@ async function refreshDashboard(email, isAdmin) {
     }, 600);
 }
 
-async function fetchAdminStats(email) {
+async function fetchAdminStats() {
+    const token = localStorage.getItem('token');
     try {
-        const response = await fetch(`http://localhost:8000/api/admin/stats?email=${encodeURIComponent(email)}`);
+        const response = await fetch(`http://localhost:8000/api/admin/stats`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         
         if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
+                alert('Session expired or access denied.');
+                window.location.href = 'login.html';
+                return;
+            }
             throw new Error('Failed to fetch admin stats');
         }
 
@@ -73,11 +82,21 @@ async function fetchAdminStats(email) {
     }
 }
 
-async function fetchUserStats(email) {
+async function fetchUserStats() {
+    const token = localStorage.getItem('token');
     try {
-        const response = await fetch(`http://localhost:8000/api/user/stats?email=${encodeURIComponent(email)}`);
+        const response = await fetch(`http://localhost:8000/api/user/stats`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         
         if (!response.ok) {
+            if (response.status === 401) {
+                alert('Session expired. Please log in again.');
+                window.location.href = 'login.html';
+                return;
+            }
             throw new Error('Failed to fetch user stats');
         }
 

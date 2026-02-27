@@ -43,6 +43,7 @@ function checkAuthState() {
             e.preventDefault();
             if (confirm('Do you want to logout?')) {
                 localStorage.removeItem('user');
+                localStorage.removeItem('token');
                 alert('Logged out successfully');
                 window.location.reload();
             }

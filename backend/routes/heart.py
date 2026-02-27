@@ -350,9 +350,8 @@ Keep the response clear, actionable, and between 400-600 words.
                 from database import log_prediction
                 from utils import get_email
                 email = get_email()
-                input_summary = f"Age: {age}, BP: {resting_bp}, Chol: {cholesterol}, BMI: {bmi}"
-                outcome = f"{risk_percentage:.1f}% Risk"
-                log_prediction(email, "Heart Disease", input_summary, outcome)
+                # Log full features for retraining pipeline
+                log_prediction(email, "Heart Disease", features.to_dict(orient='records')[0], f"{risk_percentage:.1f}% Risk")
             except Exception as log_err:
                 pass
                 

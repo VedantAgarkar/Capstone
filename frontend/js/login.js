@@ -115,6 +115,9 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         if (response.ok) {
             // Success - save user data and redirect to dashboard
             localStorage.setItem('user', JSON.stringify(result.user));
+            if (result.token) {
+                localStorage.setItem('token', result.token);
+            }
             alert('Login successful! Redirecting to dashboard...');
             window.location.href = 'index.html';
         } else {

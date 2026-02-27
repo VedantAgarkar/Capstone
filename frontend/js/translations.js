@@ -83,16 +83,10 @@ window.translations = {
       heart: "Heart Disease Risk",
       parkinsons: "Parkinson's Detection",
       diabetes: "Diabetes Prediction",
-      triage: "AI Symptom Checker",
       bot: "Health Chatbot"
     },
     products: {
       title: "Our Health Products",
-      triage: {
-        title: "AI Symptom Checker",
-        desc: "Not sure where to start? Describe your symptoms and let our AI guide you to the right assessment.",
-        btn: "Check Symptoms"
-      },
       heart: {
         title: "Heart Disease Risk",
         desc: "Get a comprehensive heart disease risk assessment based on your health metrics.",
@@ -203,16 +197,10 @@ window.translations = {
       heart: "हृदयरोग जोखीम",
       parkinsons: "पार्किन्सन निदान",
       diabetes: "मधुमेह अंदाज",
-      triage: "एआय लक्षण तपासणी",
       bot: "आरोग्य चॅटबॉट"
     },
     products: {
       title: "आमची आरोग्य उत्पादने",
-      triage: {
-        title: "एआय लक्षण तपासणी",
-        desc: "कुठून सुरुवात करावी हे माहित नाही? तुमच्या लक्षणांचे वर्णन करा आणि आमचे एआय तुम्हाला योग्य मूल्यांकनासाठी मार्गदर्शन करेल.",
-        btn: "लक्षणे तपासा"
-      },
       heart: {
         title: "हृदयविकाराचा धोका",
         desc: "तुमच्या आरोग्य मेट्रिक्सवर आधारित सर्वसमावेशक हृदयरोगाच्या जोखीमेचे मूल्यांकन करा.",

@@ -416,9 +416,8 @@ Keep the response clear, actionable, and between 400-600 words.
                 from database import log_prediction
                 from utils import get_email
                 email = get_email()
-                input_summary = f"Age: {age}, Freq: {mdvp_fo:.1f}Hz, Jitter: {mdvp_jitter_percent:.4f}"
-                outcome = f"{risk_percentage:.1f}% Risk"
-                log_prediction(email, "Parkinson's", input_summary, outcome)
+                # Log full features for retraining pipeline
+                log_prediction(email, "Parkinson's", features.to_dict(orient='records')[0], f"{risk_percentage:.1f}% Risk")
             except Exception as log_err:
                 pass
                 

@@ -283,11 +283,13 @@ Please provide:
                 from utils import get_email
                 
                 email = get_email()
-                # Format inputs for easy reading in admin panel
-                input_summary = f"Age: {age}, Glucose: {glucose}, BMI: {bmi}, Insulin: {insulin}"
-                outcome = f"{risk_percentage:.1f}% Risk"
-                
-                log_prediction(email, "Diabetes", input_summary, outcome)
+                # Log full features for retraining pipeline
+                feature_dict = {
+                    'Pregnancies': pregnancies, 'Glucose': glucose, 'BloodPressure': blood_pressure,
+                    'SkinThickness': skin_thickness, 'Insulin': insulin, 'BMI': bmi,
+                    'DiabetesPedigreeFunction': diabetes_pedigree, 'Age': age
+                }
+                log_prediction(email, "Diabetes", feature_dict, f"{risk_percentage:.1f}% Risk")
             except Exception as log_err:
                 st.error(f"Note: Could not log prediction result: {log_err}")
                 

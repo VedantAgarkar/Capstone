@@ -21,9 +21,13 @@ def create_admin(email):
     else:
         print(f"User {email} not found. Creating default admin account...")
         # Default password is 'admin123'
+        from passlib.context import CryptContext
+        pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+        hashed_password = pwd_context.hash("admin123")
+        
         cursor.execute(
             "INSERT INTO users (email, password, fullname, is_admin) VALUES (?, ?, ?, ?)",
-            (email, "admin123", "System Admin", 1)
+            (email, hashed_password, "System Admin", 1)
         )
     
     conn.commit()

@@ -2,13 +2,16 @@ import subprocess
 import sys
 import logging
 import os
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException, Body, Header, Depends
 from pydantic import BaseModel, EmailStr
 from backend.database import get_db_connection, init_db
 import sqlite3
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+from passlib.context import CryptContext
+import jwt
+from datetime import datetime, timedelta
 
 # Lazy load routes to avoid loading incompatible models at startup
 # from backend.routes import heart 
@@ -22,6 +25,47 @@ load_dotenv()
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Password hashing configuration
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def verify_password(plain_password, hashed_password):
+    try:
+        return pwd_context.verify(plain_password, hashed_password)
+    except Exception:
+        # Fallback for old plain-text passwords
+        return plain_password == hashed_password
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+# JWT constants
+SECRET_KEY = os.getenv("JWT_SECRET", "supersecretkey123")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 1440 # 24 hours
+
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def get_current_user(authorization: str = Header(None)):
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid token")
+    
+    token = authorization.split(" ")[1]
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise HTTPException(status_code=401, detail="Invalid token payload")
+        return {"email": email, "is_admin": payload.get("is_admin", False)}
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 app = FastAPI()
 
@@ -54,7 +98,7 @@ async def register(user: UserRegister):
         
         cursor.execute(
             "INSERT INTO users (email, password, fullname) VALUES (?, ?, ?)",
-            (email_normalized, user.password, user.fullname)
+            (email_normalized, get_password_hash(user.password), user.fullname)
         )
         conn.commit()
         return {"message": "User registered successfully"}
@@ -72,15 +116,20 @@ async def login(user: UserLogin):
     email_normalized = user.email.strip().lower()
     
     cursor.execute(
-        "SELECT * FROM users WHERE LOWER(email) = ? AND password = ?",
-        (email_normalized, user.password)
+        "SELECT * FROM users WHERE LOWER(email) = ?",
+        (email_normalized,)
     )
     db_user = cursor.fetchone()
     conn.close()
     
-    if db_user:
+    if db_user and verify_password(user.password, db_user["password"]):
+        token = create_access_token({
+            "sub": db_user["email"],
+            "is_admin": bool(db_user["is_admin"])
+        })
         return {
             "message": "Login successful",
+            "token": token,
             "user": {
                 "email": db_user["email"],
                 "fullname": db_user["fullname"],
@@ -91,17 +140,13 @@ async def login(user: UserLogin):
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
 @app.get("/api/admin/stats")
-async def get_admin_stats(email: str):
+async def get_admin_stats(current_user: dict = Depends(get_current_user)):
+    if not current_user["is_admin"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    email = current_user["email"]
     conn = get_db_connection()
     cursor = conn.cursor()
-    
-    # Check if user is admin
-    cursor.execute("SELECT is_admin FROM users WHERE email = ?", (email,))
-    user = cursor.fetchone()
-    
-    if not user or not user["is_admin"]:
-        conn.close()
-        raise HTTPException(status_code=403, detail="Access denied")
     
     # Get total user count
     cursor.execute("SELECT COUNT(*) as count FROM users")
@@ -129,10 +174,11 @@ async def get_admin_stats(email: str):
     }
 
 @app.get("/api/user/stats")
-async def get_user_stats(email: str):
+async def get_user_stats(current_user: dict = Depends(get_current_user)):
     from backend.database import get_user_predictions
     import re
     
+    email = current_user["email"]
     predictions = get_user_predictions(email)
     
     # Calculate Wellness Score
@@ -182,8 +228,7 @@ def launch_streamlit_apps():
         ("backend/routes/heart.py", 8501),
         ("backend/routes/diabetes.py", 8502),
         ("backend/routes/parkinsons.py", 8503),
-        ("backend/routes/bot.py", 8504),
-        ("backend/routes/triage.py", 8505)
+        ("backend/routes/bot.py", 8504)
     ]
     for app_path, port in apps_to_launch:
         try:

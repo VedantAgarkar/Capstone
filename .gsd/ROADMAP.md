@@ -134,13 +134,13 @@ updated: 2026-02-22
 ---
 
 ### Phase 9: Unified Health Dashboard (Wellness API)
-**Status:** 🔄 Planning
+**Status:** ✅ Complete
 **Objective:** Develop the logic and UI for the "Personal Health Report Card" to aggregate user data and calculate wellness scores.
 **Requirements:** New API endpoint for personal stats, wellness score algorithm, and UI updates for the user dashboard.
 
 **Plans:**
-- [ ] Plan 9.1: Personal Stats API & Wellness Logic
-- [ ] Plan 9.2: User Health Report Card UI
+- [x] Plan 9.1: Personal Stats API & Wellness Logic
+- [x] Plan 9.2: User Health Report Card UI
 
 ---
 

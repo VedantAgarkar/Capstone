@@ -182,7 +182,8 @@ def launch_streamlit_apps():
         ("backend/routes/heart.py", 8501),
         ("backend/routes/diabetes.py", 8502),
         ("backend/routes/parkinsons.py", 8503),
-        ("backend/routes/bot.py", 8504)
+        ("backend/routes/bot.py", 8504),
+        ("backend/routes/triage.py", 8505)
     ]
     for app_path, port in apps_to_launch:
         try:

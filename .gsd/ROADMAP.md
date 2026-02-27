@@ -130,6 +130,7 @@ updated: 2026-02-22
 - [x] Plan 8.1: Localize Heart Disease Assessment
 - [x] Plan 8.2: Localize Parkinson's Disease Assessment
 - [x] Plan 8.3: Localize Medical AI Bot & Final Polish
+- [x] Plan 8.4: Integrate Triage/Redirection logic into Medical Bot
 
 ---
 
@@ -144,13 +145,11 @@ updated: 2026-02-22
 
 ---
 
-### Phase 10: AI Symptom Checker (Triage)
-**Status:** ✅ Complete
-**Objective:** Implement a dedicated chat interface for symptom triage using LLMs.
-**Requirements:** New route for triage bot, mapping logic to health assessments, and frontend integration.
+### Phase 10: Technical & Security Enhancements
+**Status:** 🔄 Planning
+**Objective:** Harden the application with secure authentication and implement model retraining.
+**Requirements:** Password hashing (bcrypt), JWT integration, and automated retraining pipeline.
 
 **Plans:**
-- [x] Plan 10.1: Triage Bot Implementation
-- [x] Plan 10.2: Symptom Checker UI & Redirection
-
----
+- [ ] Plan 10.1: Secure Auth (Bcrypt & JWT)
+- [ ] Plan 10.2: Automated Model Retraining Pipeline

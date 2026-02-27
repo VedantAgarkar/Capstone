@@ -15,7 +15,9 @@ Integrate a secure user authentication system for HealthPredict using a SQLite-b
 5. **Admin Dashboard** — Create a "Bento Box" style dashboard visible only to admins, displaying all user data and prediction outcomes.
 6. **Data Tracking** — Log all user inputs (readings) and prediction outcomes to the database for administrative review.
 7. **Personal Health Report Card** — Aggregate prediction data from all assessments to calculate a "Wellness Score".
-8. **AI Symptom Checker** — A Chat-based triage system to direct users to the appropriate assessment.
+8. **Enhanced Medical Bot** — Upgrade the chatbot with a Triage system to direct users to appropriate assessments based on symptoms.
+9. **Secure Infrastructure** — Implement password hashing (bcrypt) and JWT-based authentication.
+10. **Model Retraining Pipeline** — Create an automated pipeline to improve model accuracy using anonymized user data.
 
 ## Non-Goals (Out of Scope)
 - OAuth (Google/GitHub) integration (Social logins remain placeholders for now).
@@ -36,7 +38,7 @@ Integrate a secure user authentication system for HealthPredict using a SQLite-b
 - [x] Backend prevents SQL injection (verified with payload test).
 - [x] Data persists across server restarts in `users.db`.
 - [ ] Users can see their "Personal Health Report Card" on their profile/dashboard.
-- [ ] AI Symptom Checker correctly identifies relevant assessment categories based on natural language input.
+- [ ] Medical Bot correctly identifies relevant assessment categories based on natural language input and provides links.
 
 ## Technical Requirements
 
@@ -48,10 +50,12 @@ Integrate a secure user authentication system for HealthPredict using a SQLite-b
 | Admin Authorization | Must-have | Verify `is_admin` flag before serving sensitive data |
 | Data Logging | Must-have | Record `user_id`, `prediction_type`, `inputs`, and `outcome` |
 | Bento Box UI | Must-have | Modern, responsive grid layout for the dashboard |
-| Password Hashing | Should-have | Using `passlib` or similar for security |
+| Triage Logic | Must-have | LLM-based system inside the Medical Bot to map symptoms to Heart/Diabetes/Parkinsons |
+| Password Hashing | Must-have | Bcrypt for secure credential storage |
+| JWT Authentication| Must-have | Secure sessions instead of plain query parameters |
+| Automated Retraining| Should-have | Pipeline for .sav model updates using new data |
 | Aggregation Logic | Must-have | Backend logic to calculate wellness score from history |
-| Triage Chatbot | Must-have | LLM-based system to map symptoms to Heart/Diabetes/Parkinsons |
 
 ---
 
-*Last updated: 2026-02-22*
+*Last updated: 2026-02-27*

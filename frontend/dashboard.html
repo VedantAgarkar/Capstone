@@ -33,15 +33,16 @@
     <main class="dashboard-container">
         <header class="dashboard-header">
             <div class="header-main">
-                <h1>Admin Control Center</h1>
-                <p>Real-time analytics and user data insights</p>
+                <h1 id="headerTitle">Admin Control Center</h1>
+                <p id="headerSubtitle">Real-time analytics and user data insights</p>
             </div>
             <button id="refreshBtn" class="refresh-btn">
                 <span class="refresh-icon">🔄</span> Refresh Data
             </button>
         </header>
 
-        <div class="bento-grid">
+        <!-- Admin View -->
+        <div class="bento-grid" id="adminView" style="display: none;">
             <!-- Total Users Card -->
             <div class="bento-item card-total-users">
                 <div class="card-icon">👥</div>
@@ -88,6 +89,48 @@
                         <tbody id="recentPredictionsBody">
                             <tr>
                                 <td colspan="4" class="loading-text">Fetching latest data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- User View -->
+        <div class="bento-grid" id="userView" style="display: none;">
+            <!-- Wellness Score Card -->
+            <div class="bento-item card-wellness">
+                <div class="card-icon">🌟</div>
+                <h3>Wellness Score</h3>
+                <div class="wellness-score-container">
+                    <div class="score-value" id="wellnessScore">--</div>
+                    <div class="score-label">Health Quotient</div>
+                </div>
+            </div>
+
+            <!-- Latest Assessments Card -->
+            <div class="bento-item card-health-status">
+                <h3>Latest Assessments</h3>
+                <div id="userHealthList">
+                    <p class="loading-text">Analyzing your records...</p>
+                </div>
+            </div>
+
+            <!-- Prediction History Card -->
+            <div class="bento-item card-user-history">
+                <h3>Your History</h3>
+                <div class="table-wrapper">
+                    <table id="userHistoryTable">
+                        <thead>
+                            <tr>
+                                <th>Assessment Type</th>
+                                <th>Result</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userHistoryBody">
+                            <tr>
+                                <td colspan="3" class="loading-text">Fetching your history...</td>
                             </tr>
                         </tbody>
                     </table>

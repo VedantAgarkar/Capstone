@@ -120,29 +120,34 @@ function initSpotlightEffect() {
 
 /**
  * 3. Typewriter Text Animation
+ * Delay start until i18n has resolved the final heading text.
  */
 function initTypewriterEffect() {
   const heading = document.querySelector('.product-heading');
-  if (heading) {
-    const text = heading.innerText; // Get original text (likely from i18n)
-    heading.innerText = '';
-    heading.style.borderRight = '3px solid #B79347'; // Blinking cursor
+  if (!heading) return;
+
+  // Wait for i18n to update the text content, then start typewriter
+  setTimeout(() => {
+    // Use textContent (not innerText) to preserve spaces between words
+    const text = heading.textContent.trim();
+    heading.textContent = '';
+    heading.style.borderRight = '3px solid #B79347'; // cursor
     heading.style.width = 'fit-content';
-    heading.style.margin = '46px auto 35px auto'; // Keep centered
+    heading.style.margin = '46px auto 35px auto';
     heading.style.whiteSpace = 'nowrap';
     heading.style.overflow = 'hidden';
-    
+    heading.style.wordSpacing = 'normal';
+
     let i = 0;
     const type = () => {
       if (i < text.length) {
-        heading.innerText += text.charAt(i);
+        heading.textContent += text[i]; // index notation preserves spaces
         i++;
-        setTimeout(type, 50); // Typing speed
+        setTimeout(type, 50);
       } else {
-        heading.style.borderRight = 'none'; // Remove cursor when done
+        heading.style.borderRight = 'none'; // remove cursor when done
       }
     };
-    // Small delay before starting
-    setTimeout(type, 500); 
-  }
+    type();
+  }, 600); // 600ms gives i18n time to run first
 }

@@ -128,6 +128,42 @@ async def get_admin_stats(email: str):
         "prediction_breakdown": breakdown
     }
 
+@app.get("/api/user/stats")
+async def get_user_stats(email: str):
+    from backend.database import get_user_predictions
+    import re
+    
+    predictions = get_user_predictions(email)
+    
+    # Calculate Wellness Score
+    latest_by_type = {}
+    for p in predictions:
+        if p["type"] not in latest_by_type:
+            latest_by_type[p["type"]] = p
+            
+    scores = []
+    assessment_types = ["Heart Disease", "Diabetes", "Parkinson's"]
+    
+    for t in assessment_types:
+        if t in latest_by_type:
+            outcome = latest_by_type[t]["outcome"]
+            # Extract number from "75.0% Risk"
+            match = re.search(r"(\d+\.?\d*)%", outcome)
+            if match:
+                risk_pct = float(match.group(1))
+                scores.append(100 - risk_pct)
+            else:
+                scores.append(100)
+        else:
+            scores.append(100)
+            
+    wellness_score = sum(scores) / len(assessment_types)
+    
+    return {
+        "predictions": predictions,
+        "wellness_score": round(wellness_score, 1)
+    }
+
 app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 
 # Store process handles for cleanup

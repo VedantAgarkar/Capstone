@@ -88,5 +88,24 @@ def log_prediction(email, prediction_type, inputs, outcome):
     finally:
         conn.close()
 
+def get_user_predictions(email):
+    """Retrieves all predictions for a specific user email."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        email = email.strip().lower()
+        cursor.execute("""
+            SELECT p.* FROM predictions p 
+            JOIN users u ON p.user_id = u.id 
+            WHERE LOWER(u.email) = ? 
+            ORDER BY timestamp DESC
+        """, (email,))
+        return [dict(row) for row in cursor.fetchall()]
+    except Exception as e:
+        print(f"Database Error in get_user_predictions: {e}")
+        return []
+    finally:
+        conn.close()
+
 if __name__ == "__main__":
     init_db()

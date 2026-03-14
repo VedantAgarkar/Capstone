@@ -132,7 +132,7 @@ if user_input := st.chat_input(L('placeholder')):
         with st.spinner(L('thinking')):
             system_prompt = L('system_prompt') + " If the user ask non-medical question, say it's not medical related."
             
-            full_response = call_openai_api(client, user_input, openrouter_model, timeout=30, system_prompt=system_prompt)
+            full_response = call_openai_api(client, model=openrouter_model, timeout=30, system_prompt=system_prompt, messages=st.session_state.messages)
             
             if full_response:
                 # Simulate typing effect

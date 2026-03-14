@@ -41,12 +41,12 @@ function checkAuthState() {
         // Add logout on click with confirmation
         loginBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            if (confirm('Do you want to logout?')) {
+            hConfirm('Logout', 'Are you sure you want to log out of your account?', () => {
                 localStorage.removeItem('user');
                 localStorage.removeItem('token');
-                alert('Logged out successfully');
-                window.location.reload();
-            }
+                hToast('Logged out successfully');
+                setTimeout(() => window.location.reload(), 1200);
+            });
         });
     }
 }
@@ -165,3 +165,136 @@ function initializeSmoothScroll() {
     });
   });
 }
+
+
+/**
+ * CUSTOM NOTIFICATION SYSTEM
+ * Replaces browser's default alert(), confirm(), and notifications
+ */
+
+/**
+ * Shows a custom modal alert
+ * @param {string} title 
+ * @param {string} message 
+ * @param {function} callback 
+ */
+window.hAlert = function(title, message, callback = null) {
+  // Clear any existing modals
+  const existing = document.querySelector('.h-modal-overlay');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'h-modal-overlay';
+  overlay.innerHTML = `
+    <div class="h-modal">
+      <div class="h-modal-title">${title}</div>
+      <div class="h-modal-text">${message}</div>
+      <div class="h-modal-footer">
+        <button class="h-modal-btn h-modal-btn-primary">OK</button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(overlay);
+  
+  // Trigger animation
+  setTimeout(() => overlay.classList.add('active'), 10);
+  
+  const btn = overlay.querySelector('.h-modal-btn-primary');
+  btn.onclick = () => {
+    overlay.classList.remove('active');
+    setTimeout(() => {
+      overlay.remove();
+      if (callback) callback();
+    }, 300);
+  };
+};
+
+/**
+ * Shows a custom confirmation modal
+ * @param {string} title 
+ * @param {string} message 
+ * @param {function} onConfirm 
+ * @param {function} onCancel 
+ */
+window.hConfirm = function(title, message, onConfirm, onCancel = null) {
+  const existing = document.querySelector('.h-modal-overlay');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'h-modal-overlay';
+  overlay.innerHTML = `
+    <div class="h-modal">
+      <div class="h-modal-title">${title}</div>
+      <div class="h-modal-text">${message}</div>
+      <div class="h-modal-footer">
+        <button class="h-modal-btn h-modal-btn-secondary btn-cancel">Cancel</button>
+        <button class="h-modal-btn h-modal-btn-primary btn-confirm">Confirm</button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(overlay);
+  setTimeout(() => overlay.classList.add('active'), 10);
+  
+  const confirmBtn = overlay.querySelector('.btn-confirm');
+  const cancelBtn = overlay.querySelector('.btn-cancel');
+  
+  confirmBtn.onclick = () => {
+    overlay.classList.remove('active');
+    setTimeout(() => {
+      overlay.remove();
+      if (onConfirm) onConfirm();
+    }, 300);
+  };
+  
+  cancelBtn.onclick = () => {
+    overlay.classList.remove('active');
+    setTimeout(() => {
+      overlay.remove();
+      if (onCancel) onCancel();
+    }, 300);
+  };
+};
+
+/**
+ * Shows a quick toast notification
+ * @param {string} message 
+ * @param {number} duration 
+ */
+window.hToast = function(message, duration = 3000) {
+  const existing = document.querySelector('.h-toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = 'h-toast';
+  toast.innerHTML = `
+    <i class="h-toast-icon">✨</i>
+    <span class="h-toast-text">${message}</span>
+  `;
+  
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add('active'), 10);
+  
+    setTimeout(() => {
+    toast.classList.remove('active');
+    setTimeout(() => toast.remove(), 400);
+  }, duration);
+};
+
+// Override standard browser methods to ensure consistency
+// This catches any missed alert() or confirm() calls
+window.alert = function(message) {
+  window.hAlert('HealthPredict', message);
+};
+
+window.confirm = function(message) {
+  // Note: Modern browsers no longer block on custom modals, 
+  // so this override might require callback-based logic in the calling code.
+  // But for simple "OK/Cancel" style UI consistency, we show the modal.
+  console.warn("Standard confirm() called. Use hConfirm() for proper callback handling.");
+  window.hAlert('Confirmation Required', message + "\n\n(Please use the application buttons instead of system dialogs)");
+  return true; // Simple bypass
+};
+
+

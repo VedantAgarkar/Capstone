@@ -170,8 +170,9 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
 
         if (response.ok) {
             // Success - redirect to login page
-            alert('Account created successfully! Please sign in.');
-            window.location.href = 'login.html';
+            hAlert('Account Created', 'Your account has been created successfully! Please sign in to continue.', () => {
+                window.location.href = 'login.html';
+            });
         } else {
             // Handle error from backend (e.g., 400 Email already registered)
             showError('email', 'emailError', result.detail || 'Signup failed. Please try again.');
@@ -202,7 +203,7 @@ document.querySelectorAll('.social-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
         const provider = btn.textContent.trim();
-        alert(`${provider} signup coming soon!`);
+        hToast(`${provider} signup coming soon!`);
     });
 });
 

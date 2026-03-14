@@ -150,15 +150,17 @@ def get_text(key, lang=None):
     return TRANSLATIONS.get(lang, TRANSLATIONS["en"]).get(key, key)
 
 # ─────────────── API Call Wrapper ─────────────── #
-def call_openai_api(client, prompt, model=None, timeout=30):
+def call_openai_api(client, prompt=None, model=None, timeout=30, system_prompt=None, messages=None):
     """
     Make API call to OpenRouter with error handling and timeout.
     
     Args:
         client: OpenAI client instance
-        prompt: Prompt text to send
+        prompt: Single prompt text (used if messages is None)
         model: Model name (uses default if None)
         timeout: Request timeout in seconds
+        system_prompt: System instructions for the model
+        messages: Full conversation history list
         
     Returns:
         API response content or None if error
@@ -166,23 +168,37 @@ def call_openai_api(client, prompt, model=None, timeout=30):
     if model is None:
         model = get_model_name()
     
-    lang = get_language()
-    system_instruction = "You are a helpful medical information assistant. Always remind users to consult healthcare professionals for medical advice."
+    if system_prompt is None:
+        lang = get_language()
+        system_prompt = "You are a helpful medical information assistant. Always remind users to consult healthcare professionals for medical advice."
+        
+        if lang == "mr":
+            system_prompt += " PLEASE RESPOND IN MARATHI LANGUAGE (मराठी). Transliterate technical medical terms if necessary but keep the explanation in Marathi."
     
-    if lang == "mr":
-        system_instruction += " PLEASE RESPOND IN MARATHI LANGUAGE (मराठी). Transliterate technical medical terms if necessary but keep the explanation in Marathi."
+    # Construct final messages list
+    final_messages = []
+    if messages:
+        # If history provided, use it
+        final_messages = messages.copy()
+        # Ensure system prompt is at the top if not present or different
+        if not any(m.get('role') == 'system' for m in final_messages):
+            final_messages.insert(0, {"role": "system", "content": system_prompt})
+    else:
+        # Fallback to single prompt
+        final_messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": prompt}
+        ]
     
     try:
         response = client.chat.completions.create(
             model=model,
-            messages=[
-                {"role": "system", "content": system_instruction},
-                {"role": "user", "content": prompt}
-            ],
+            messages=final_messages,
             timeout=timeout
         )
         return response.choices[0].message.content
     except Exception as e:
+        print(f"API Error: {e}")
         return None
 
 def render_risk_meter(risk_percentage):

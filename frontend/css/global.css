@@ -203,3 +203,124 @@ footer {
   margin-bottom: 20px;
   font-style: italic;
 }
+
+/* ═══════════════════════════════════════════════════ */
+/* CUSTOM MODAL & NOTIFICATION SYSTEM                */
+/* ═══════════════════════════════════════════════════ */
+
+.h-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(26, 31, 58, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.h-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.h-modal {
+  background: #ffffff;
+  width: 90%;
+  max-width: 450px;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  border-top: 5px solid var(--primary-accent);
+  text-align: center;
+}
+
+.h-modal-overlay.active .h-modal {
+  transform: translateY(0);
+}
+
+.h-modal-title {
+  color: var(--primary-dark);
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-family: var(--font-primary);
+}
+
+.h-modal-text {
+  color: #555;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.h-modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.h-modal-btn {
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-size: 1rem;
+}
+
+.h-modal-btn-primary {
+  background: var(--primary-accent);
+  color: white;
+}
+
+.h-modal-btn-primary:hover {
+  background: var(--accent-hover);
+  transform: scale(1.05);
+}
+
+.h-modal-btn-secondary {
+  background: #f1f1f1;
+  color: #333;
+}
+
+.h-modal-btn-secondary:hover {
+  background: #e5e5e5;
+}
+
+/* Toast Notification Styling */
+.h-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--primary-dark);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  border-left: 5px solid var(--primary-accent);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10000;
+  transform: translateX(120%);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.h-toast.active {
+  transform: translateX(0);
+}
+
+.h-toast-icon {
+  color: var(--primary-accent);
+  font-size: 1.2rem;
+}

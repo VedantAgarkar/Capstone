@@ -118,8 +118,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             if (result.token) {
                 localStorage.setItem('token', result.token);
             }
-            alert('Login successful! Redirecting to dashboard...');
-            window.location.href = 'index.html';
+            hToast('Login successful! Welcome back.');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
         } else {
             // Handle error from backend (e.g., 401 Invalid credentials)
             showError('email', 'emailError', result.detail || 'Login failed. Please try again.');
@@ -150,7 +152,7 @@ document.querySelectorAll('.social-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
         const provider = btn.textContent.trim();
-        alert(`${provider} login coming soon!`);
+        hToast(`${provider} login coming soon!`);
     });
 });
 

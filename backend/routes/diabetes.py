@@ -50,6 +50,7 @@ LABELS = {
         "summary_header": "### 📋 Your Diabetes Risk Assessment:",
         "high_risk": "HIGH RISK", "mod_risk": "MODERATE RISK", "low_risk": "LOW RISK",
         "prob_text": "probability of diabetes",
+        "submit_btn": "🔍 Assess Diabetes Risk",
         "footer_text": "HealthPredict | Medical Risk Assessment AI - Not a substitute for professional medical advice"
     },
     "mr": {
@@ -80,6 +81,7 @@ LABELS = {
         "summary_header": "### 📋 तुमचे मधुमेह जोखीम मूल्यांकन:",
         "high_risk": "उच्च धोका", "mod_risk": "मध्यम धोका", "low_risk": "कमी धोका",
         "prob_text": "मधुमेहाची शक्यता",
+        "submit_btn": "🔍 मधुमेहाचा धोका तपासा",
         "footer_text": "HealthPredict | वैद्यकीय जोखीम मूल्यांकन AI - व्यावसायिक वैद्यकीय सल्ल्याचा पर्याय नाही"
     }
 }

@@ -58,8 +58,9 @@ async function fetchAdminStats() {
         
         if (!response.ok) {
             if (response.status === 401 || response.status === 403) {
-                alert('Session expired or access denied.');
-                window.location.href = 'login.html';
+                hAlert('Access Denied', 'Session expired or access denied.', () => {
+                    window.location.href = 'login.html';
+                });
                 return;
             }
             throw new Error('Failed to fetch admin stats');
@@ -93,8 +94,9 @@ async function fetchUserStats() {
         
         if (!response.ok) {
             if (response.status === 401) {
-                alert('Session expired. Please log in again.');
-                window.location.href = 'login.html';
+                hAlert('Session Expired', 'Session expired. Please log in again.', () => {
+                    window.location.href = 'login.html';
+                });
                 return;
             }
             throw new Error('Failed to fetch user stats');
